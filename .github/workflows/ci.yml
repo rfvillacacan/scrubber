@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint-and-config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Lint PHP files
+        run: |
+          php -l index.php
+          php -l healthz.php
+          php -l docs/readme.php
+          find lib -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Validate Docker Compose
+        run: docker compose config
+
+      - name: Security Regression Checks
+        run: bash tests/security_regression.sh
+
+      - name: Auth Regression Checks
+        run: bash tests/auth_regression.sh

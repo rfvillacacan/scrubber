@@ -1,0 +1,81 @@
+{
+    "ruleset_id": "PHI",
+    "version": "1.0.0",
+    "description": "Protected health information detection",
+    "author": "Security",
+    "priority_base": 850,
+    "rules": [
+        {
+            "id": "PATIENT_NAME",
+            "enabled": true,
+            "priority": 130,
+            "pattern": "\\b(?:PATIENT NAME|PATIENT)\\s*[:=]\\s*[A-Z][A-Za-z.'-]+(?:\\s+[A-Z][A-Za-z.'-]+){1,3}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "MRN",
+            "enabled": true,
+            "priority": 120,
+            "pattern": "\\b(?:MRN|MEDICAL RECORD NUMBER)\\s*[:=]?\\s*[A-Z]{0,3}-?\\d{5,10}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "HEALTH_PLAN",
+            "enabled": true,
+            "priority": 118,
+            "pattern": "\\b(?:HEALTH PLAN|HP)\\s*(?:ID|NUMBER)?\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "DIAGNOSIS",
+            "enabled": true,
+            "priority": 115,
+            "pattern": "\\b(?:DIAGNOSIS|DX)\\s*[:=]\\s*[A-Za-z0-9 ,.'-]{3,80}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "PRESCRIPTION",
+            "enabled": true,
+            "priority": 112,
+            "pattern": "\\b(?:PRESCRIPTION|RX)\\s*[:=]\\s*[A-Za-z0-9 ,.'-]{3,80}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "LAB_ID",
+            "enabled": true,
+            "priority": 110,
+            "pattern": "\\b(?:LAB RESULT ID|LAB ID)\\s*[:=]\\s*[A-Z]{0,3}-?\\d{4,10}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "ADMISSION_DATE",
+            "enabled": true,
+            "priority": 108,
+            "pattern": "\\b(?:ADMISSION DATE)\\s*[:=]?\\s*\\d{4}-\\d{2}-\\d{2}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "DISCHARGE_DATE",
+            "enabled": true,
+            "priority": 107,
+            "pattern": "\\b(?:DISCHARGE DATE)\\s*[:=]?\\s*\\d{4}-\\d{2}-\\d{2}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "INSURANCE_POLICY",
+            "enabled": true,
+            "priority": 106,
+            "pattern": "\\b(?:INSURANCE POLICY|POLICY)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        }
+    ]
+}

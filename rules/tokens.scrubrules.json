@@ -1,0 +1,241 @@
+{
+    "ruleset_id": "TOKENS",
+    "version": "1.2.0",
+    "description": "Credentials, tokens, secrets, and key material",
+    "author": "Security",
+    "priority_base": 900,
+    "rules": [
+        {
+            "id": "PRIVATE_KEY_BLOCK",
+            "enabled": true,
+            "priority": 200,
+            "pattern": "-----BEGIN(?:[A-Z ]+)?PRIVATE KEY-----[\\s\\S]+?-----END(?:[A-Z ]+)?PRIVATE KEY-----",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "CERT_BLOCK",
+            "enabled": true,
+            "priority": 195,
+            "pattern": "-----BEGIN CERTIFICATE-----[\\s\\S]+?-----END CERTIFICATE-----",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "URL_BASIC_AUTH",
+            "enabled": true,
+            "priority": 190,
+            "pattern": "\\b[a-z][a-z0-9+.-]*:\\/\\/[^:\\s\\/]+:[^@\\s\\/]+@[^\\/\\s]+(?:\\/[\\S]*)?",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "BEARER_TOKEN",
+            "enabled": true,
+            "priority": 188,
+            "pattern": "\\bBearer\\s+[A-Za-z0-9._=-]{10,}(?:\\.[A-Za-z0-9._=-]{4,}){1,}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "BASIC_AUTH",
+            "enabled": true,
+            "priority": 187,
+            "pattern": "\\bAuthorization\\s*:\\s*Basic\\s+[A-Za-z0-9+\\/=]{12,}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "API_KEY_HEADER",
+            "enabled": true,
+            "priority": 186,
+            "pattern": "\\b(?:X-API-KEY|X-APIKEY|API-KEY|APIKEY|X-AUTH-TOKEN|X-ACCESS-TOKEN|X-TOKEN|X-API-TOKEN|X-CLIENT-SECRET|X-CLIENT-TOKEN)\\s*:\\s*[^\\s,;]{8,}",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "API_KEY_QUERY",
+            "enabled": true,
+            "priority": 185,
+            "pattern": "[?&](?:api_key|apikey|access_token|auth_token|token|key|client_secret|client_token)=([A-Za-z0-9._~%+-]{8,})",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "API_KEY_COOKIE",
+            "enabled": true,
+            "priority": 184,
+            "pattern": "\\b(?:Cookie|Set-Cookie)\\s*:\\s*[^\\n]*?(?:api_key|apikey|access_token|auth_token|token)=[^;\\s]{8,}",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "SESSION_COOKIE",
+            "enabled": true,
+            "priority": 183,
+            "pattern": "\\b(?:JSESSIONID|SESSIONID|SESSION|SID|PHPSESSID)=[A-Za-z0-9._-]{16,}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "TRACE_ID",
+            "enabled": true,
+            "priority": 182,
+            "pattern": "\\b(?:REQUEST-ID|REQUEST_ID|TRACE-ID|TRACE_ID)\\s*[:=]\\s*[A-F0-9-]{16,}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "UUID",
+            "enabled": true,
+            "priority": 181,
+            "pattern": "\\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "JDBC_URL",
+            "enabled": true,
+            "priority": 180,
+            "pattern": "\\bjdbc:[a-z0-9+.-]+:\\/\\/[^\\s]+",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "PASSWORD_ASSIGN",
+            "enabled": true,
+            "priority": 170,
+            "pattern": "\\b(?:DB_PASS|DB_PASSWORD|PASSWORD|PASS|SECRET|APP_SECRET|API_KEY|TOKEN|ACCESS_KEY|SECRET_KEY)\\s*=\\s*[A-Za-z0-9][^\\s\"']*",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "USERNAME_ASSIGN",
+            "enabled": true,
+            "priority": 165,
+            "pattern": "\\b(?:DB_USER|USER|USERNAME)\\s*=\\s*[A-Za-z0-9._-]{3,}(?!@)",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "JWT_EYJ",
+            "enabled": true,
+            "priority": 160,
+            "pattern": "(?<![A-Za-z0-9_-])eyJ[A-Za-z0-9_-]*(?:\\.[A-Za-z0-9_-]+){2,}(?![A-Za-z0-9_-])",
+            "flags": "",
+            "validation": "jwt_structure"
+        },
+        {
+            "id": "JWT",
+            "enabled": true,
+            "priority": 158,
+            "pattern": "(?<![A-Za-z0-9_-])[A-Za-z0-9_-]{10,}(?:\\.[A-Za-z0-9_-]{10,}){2,}(?![A-Za-z0-9_-])",
+            "flags": "",
+            "validation": "jwt_structure"
+        },
+        {
+            "id": "STRIPE_KEY",
+            "enabled": true,
+            "priority": 155,
+            "pattern": "\\bsk_(?:test|live)_[A-Za-z0-9]{16,}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "STRIPE_PUBLISHABLE",
+            "enabled": true,
+            "priority": 154,
+            "pattern": "\\bpk_(?:test|live)_[A-Za-z0-9]{16,}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "OPENAI_KEY",
+            "enabled": true,
+            "priority": 153,
+            "pattern": "\\bsk-[A-Za-z0-9]{16,}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "ANTHROPIC_KEY",
+            "enabled": true,
+            "priority": 152,
+            "pattern": "\\bsk-ant-[A-Za-z0-9_-]{16,}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "AWS_ACCESS_KEY",
+            "enabled": true,
+            "priority": 151,
+            "pattern": "\\bAKIA[0-9A-Z]{16}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "GOOGLE_API_KEY",
+            "enabled": true,
+            "priority": 150,
+            "pattern": "\\bAIza[0-9A-Za-z_-]{30,}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "SLACK_TOKEN",
+            "enabled": true,
+            "priority": 149,
+            "pattern": "\\bxox[baprs]-[A-Za-z0-9-]{10,}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "SENDGRID_KEY",
+            "enabled": true,
+            "priority": 148,
+            "pattern": "\\bSG\\.[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "TWILIO_KEY",
+            "enabled": true,
+            "priority": 147,
+            "pattern": "\\bAC[a-f0-9]{32}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "MAILGUN_KEY",
+            "enabled": true,
+            "priority": 146,
+            "pattern": "\\bkey-[A-Za-z0-9]{20,}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "MAPBOX_TOKEN",
+            "enabled": true,
+            "priority": 145,
+            "pattern": "\\b(?:pk|sk)\\.[A-Za-z0-9]{20,}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "GITHUB_TOKEN",
+            "enabled": true,
+            "priority": 144,
+            "pattern": "\\bghp_[A-Za-z0-9]{20,}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "BASE64_BLOB",
+            "enabled": true,
+            "priority": 120,
+            "pattern": "(?<![A-Za-z0-9+\\/=])[A-Za-z0-9+\\/]{24,}={0,2}(?![A-Za-z0-9+\\/=])",
+            "flags": "",
+            "validation": null
+        }
+    ]
+}

@@ -1,0 +1,25 @@
+{
+    "ruleset_id": "PCI",
+    "version": "1.0.0",
+    "description": "Payment card data detection",
+    "author": "Security",
+    "priority_base": 1000,
+    "rules": [
+        {
+            "id": "CREDIT_CARD",
+            "enabled": true,
+            "priority": 200,
+            "pattern": "\\b(?:\\d[ -]*?){13,19}\\b",
+            "flags": "",
+            "validation": "luhn"
+        },
+        {
+            "id": "CVV",
+            "enabled": true,
+            "priority": 190,
+            "pattern": "\\b(?:cvv|cvc|cvv2|cvc2)\\s*[:=]?\\s*\\d{3,4}\\b",
+            "flags": "i",
+            "validation": null
+        }
+    ]
+}

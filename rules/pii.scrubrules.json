@@ -1,0 +1,97 @@
+{
+    "ruleset_id": "PII",
+    "version": "1.2.2",
+    "description": "Personally identifiable information detection",
+    "author": "Security",
+    "priority_base": 800,
+    "rules": [
+        {
+            "id": "EMAIL",
+            "enabled": true,
+            "priority": 130,
+            "pattern": "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "PHONE_LABEL",
+            "enabled": true,
+            "priority": 120,
+            "pattern": "\\b(?:PHONE|MOBILE|TEL|CONTACT)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]\\s*\\+?\\d[\\d\\s().-]{6,}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "SSN",
+            "enabled": true,
+            "priority": 115,
+            "pattern": "\\b(?:SSN|SOCIAL|TAXPAYER ID|TIN)\\s*[:=]?\\s*\\d{3}-\\d{2}-\\d{4}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "PASSPORT",
+            "enabled": true,
+            "priority": 110,
+            "pattern": "\\b(?:PASSPORT|PPN)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]?\\s*[A-Z0-9]{6,9}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "DRIVER_LICENSE",
+            "enabled": true,
+            "priority": 108,
+            "pattern": "\\b(?:DL|DRIVER(?:'|)?S?\\s*LICEN[CS]E)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]?\\s*[A-Z0-9-]{5,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "NATIONAL_ID_GENERIC",
+            "enabled": true,
+            "priority": 106,
+            "pattern": "\\b(?:NATIONAL ID|NID|GOVT ID|ID NUMBER)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "DOB",
+            "enabled": true,
+            "priority": 104,
+            "pattern": "\\b(?:DOB|DATE OF BIRTH)\\s*[:=]?\\s*(?:\\d{4}[-\\/.](?:0[1-9]|1[0-2])[-\\/.](?:0[1-9]|[12][0-9]|3[01])|(?:0[1-9]|1[0-2])[-\\/.](?:0[1-9]|[12][0-9]|3[01])[-\\/.]\\d{4})\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "GEO_COORD",
+            "enabled": true,
+            "priority": 102,
+            "pattern": "\\b-?(?:180(?:\\.0+)?|1[0-7]\\d(?:\\.\\d+)?|\\d{1,2}(?:\\.\\d+)?),\\s*-?(?:180(?:\\.0+)?|1[0-7]\\d(?:\\.\\d+)?|\\d{1,2}(?:\\.\\d+)?)\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "PERSON_NAME_LABEL",
+            "enabled": true,
+            "priority": 100,
+            "pattern": "\\b(?:FULL NAME|NAME)\\s*[:=]\\s*[A-Z][A-Za-z.'-]+(?:\\s+[A-Z][A-Za-z.'-]+){1,3}\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "ALTERNATE_NAME",
+            "enabled": true,
+            "priority": 98,
+            "pattern": "\\b(?:ALTERNATE FORMAT|ALT NAME|ALIAS NAME)\\s*[:=]\\s*[A-Z][A-Z' -]+,\\s*[A-Z][A-Z' -]+\\b",
+            "flags": "",
+            "validation": null
+        },
+        {
+            "id": "ADDRESS_LINE",
+            "enabled": true,
+            "priority": 95,
+            "pattern": "\\b\\d{1,6}\\s+[A-Za-z0-9.'-]+(?:\\s+[A-Za-z0-9.'-]+){0,6},\\s*[A-Za-z .'-]+,\\s*[A-Z]{2}\\s*\\d{5}(?:-\\d{4})?\\b",
+            "flags": "",
+            "validation": null
+        }
+    ]
+}

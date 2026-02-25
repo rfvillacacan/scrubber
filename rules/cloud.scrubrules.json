@@ -1,0 +1,33 @@
+{
+    "ruleset_id": "CLOUD",
+    "version": "1.1.0",
+    "description": "Cloud and DevOps identifiers",
+    "author": "Security",
+    "priority_base": 700,
+    "rules": [
+        {
+            "id": "S3_BUCKET",
+            "enabled": true,
+            "priority": 120,
+            "pattern": "\\bs3:\\/\\/[a-z0-9.-]{3,63}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "DOCKER_REGISTRY",
+            "enabled": true,
+            "priority": 115,
+            "pattern": "\\b[a-z0-9.-]+\\.(?:corp|internal|local|lan)(?::\\d{2,5})?\\/[A-Za-z0-9._-]+(?::[A-Za-z0-9._-]+)?\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "AZURE_TENANT_ID",
+            "enabled": true,
+            "priority": 110,
+            "pattern": "\\b(?:AZURE TENANT ID|TENANT ID)\\s*[:=]?\\s*[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\b",
+            "flags": "i",
+            "validation": null
+        }
+    ]
+}

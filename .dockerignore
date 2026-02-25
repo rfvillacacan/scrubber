@@ -1,0 +1,9 @@
+.git
+.gitignore
+archive
+certs
+.env
+.vscode
+.idea
+*.bak
+*.bak_*

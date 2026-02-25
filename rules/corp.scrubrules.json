@@ -1,0 +1,105 @@
+{
+    "ruleset_id": "CORP",
+    "version": "1.0.1",
+    "description": "Corporate confidential identifiers and accounting metadata",
+    "author": "Security",
+    "priority_base": 600,
+    "rules": [
+        {
+            "id": "INVOICE",
+            "enabled": true,
+            "priority": 120,
+            "pattern": "\\b(?:INVOICE|INV)\\s*(?:NO|NUMBER)?\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "PURCHASE_ORDER",
+            "enabled": true,
+            "priority": 118,
+            "pattern": "\\b(?:PURCHASE ORDER|PO)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "CONTRACT",
+            "enabled": true,
+            "priority": 116,
+            "pattern": "\\b(?:CONTRACT|CNT)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "BOARD_MEETING",
+            "enabled": true,
+            "priority": 114,
+            "pattern": "\\b(?:BOARD MEETING|BM)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "DOC_ID",
+            "enabled": true,
+            "priority": 112,
+            "pattern": "\\b(?:DOCUMENT ID|DOC ID|DOC-INT)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "CLIENT_LIST",
+            "enabled": true,
+            "priority": 110,
+            "pattern": "\\b(?:CLIENT LIST)\\s*[:=]?\\s*[A-Za-z0-9 ,.'-]{3,100}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "GL_ACCOUNT",
+            "enabled": true,
+            "priority": 108,
+            "pattern": "\\bGL\\s*ACCOUNT\\s*[:=]?\\s*[A-Z0-9-]{4,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "BANK_TRANSFER_REF",
+            "enabled": true,
+            "priority": 106,
+            "pattern": "\\b(?:BANK TRANSFER REF|TRX)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "TAX_ID",
+            "enabled": true,
+            "priority": 104,
+            "pattern": "\\b(?:TAX ID)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "VAT_NUMBER",
+            "enabled": true,
+            "priority": 103,
+            "pattern": "\\b(?:VAT NUMBER|VAT)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "PAYROLL_ID",
+            "enabled": true,
+            "priority": 102,
+            "pattern": "\\b(?:PAYROLL ID|PAY-EMP)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "SALARY_BONUS",
+            "enabled": true,
+            "priority": 100,
+            "pattern": "\\b(?:SALARY|BONUS)\\s*[:=]?\\s*\\$?\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?\\b",
+            "flags": "i",
+            "validation": null
+        }
+    ]
+}

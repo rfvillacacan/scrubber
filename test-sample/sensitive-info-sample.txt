@@ -1,0 +1,196 @@
+================================================================================
+GLOBAL INCIDENT & DATA EXPOSURE TEST BUNDLE
+================================================================================
+
+==============================
+SECTION 1 – PERSONAL IDENTIFIABLE INFORMATION (PII)
+==============================
+
+Full Name: John A. Doe
+Alternate Format: DOE, JOHN ALLEN
+Email: john.doe@example.com
+Corporate Email: john.doe@corp.internal
+Alias Email: john+finance@corp.internal
+Uppercase Email: JOHN.DOE@CORP.INTERNAL
+Phone (US): +1 (555) 123-4567
+Phone (UK): +44 7700 900123
+Phone (PH): +63 917 123 4567
+SSN: 123-45-6789
+National ID (PH): 12-3456789-0
+Passport (US): C12345678
+Driver License: D123-4567-8901
+Date of Birth: 1985-10-21
+Alternate DOB: 10/21/1985
+Home Address: 1234 Elm Street, Springfield, IL 62704, USA
+Geo Coordinates: 37.7749,-122.4194
+
+Repeated Email:
+john.doe@example.com
+john.doe@example.com
+
+==============================
+SECTION 2 – BANKING & FINANCIAL DATA
+==============================
+
+Visa: 4111 1111 1111 1111
+MasterCard: 5500-0000-0000-0004
+AMEX: 3400 000000 00009
+Discover: 6011 0000 0000 0004
+CVV: 123
+Expiry: 12/29
+IBAN (UK): GB29NWBK60161331926819
+IBAN (DE): DE89370400440532013000
+SWIFT/BIC: DEUTDEFFXXX
+Routing Number (US): 021000021
+Account Number: 123456789012
+Payment Token: tok_1N9FakeTokenABCDEF
+Stripe Key: sk_live_51N9FakeStripeKeyABCDEFG1234567890
+PayPal Token: A21AAFakePayPalToken987654
+
+Repeated Card:
+4111 1111 1111 1111
+
+==============================
+SECTION 3 – AUTHENTICATION & TOKENS
+==============================
+
+JWT:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNjE2MjM5MDIyfQ.fakeSignature123456
+
+OAuth Bearer:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature
+
+GitHub Token:
+ghp_fakegithubtoken1234567890abcdef
+
+AWS Access Key:
+AKIAIOSFODNN7EXAMPLE
+
+Session Cookie:
+JSESSIONID=ABCDEF1234567890ABCDEF1234567890
+
+DB Password:
+DB_PASS=SuperSecretPassword!2026
+
+SSH Private Key:
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASC...
+-----END PRIVATE KEY-----
+
+==============================
+SECTION 4 – HEALTHCARE (PHI)
+==============================
+
+Patient Name: Maria Santos
+Medical Record Number: MRN-00012345
+Health Plan ID: HP-987654321
+Diagnosis: Type II Diabetes
+Prescription: Metformin 500mg
+Lab Result ID: LAB-2026-0001
+Admission Date: 2026-02-21
+Discharge Date: 2026-02-23
+Insurance Policy: INS-44556677
+
+==============================
+SECTION 5 – NETWORK & INFRASTRUCTURE
+==============================
+
+Internal IPv4: 192.168.10.45
+Gateway: 10.0.0.1
+Public IP: 8.8.8.8
+Private Subnet: 192.168.10.0/24
+DMZ Subnet: 10.10.0.0/16
+Cluster CIDR: 172.16.0.0/12
+IPv6: 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+Short IPv6: fe80::1ff:fe23:4567:890a
+MAC Address: 00:1A:2B:3C:4D:5E
+Hostname: db01.internal.local
+App Server: app-server-01.corp.internal
+Legacy System: legacy-app.corp.local
+URL: https://app-server-01.corp.internal/login?user=john.doe@example.com
+
+==============================
+SECTION 6 – CORPORATE CONFIDENTIAL
+==============================
+
+Internal Memo:
+Project Titan acquisition planned Q4 2026.
+Estimated valuation: $250,000,000 USD.
+Board Meeting ID: BM-2026-004
+Confidential Document ID: DOC-INT-445566
+Contract Number: CNT-2026-9988
+Client List: Acme Corp, Globex LLC, Initech Ltd.
+
+==============================
+SECTION 7 – ACCOUNTING RECORDS
+==============================
+
+Invoice No: INV-2026-0001
+Purchase Order: PO-44556677
+GL Account: 4000-REVENUE
+Bank Transfer Ref: TRX-9876543210
+Tax ID: TAX-123456789
+VAT Number (EU): EU123456789
+Payroll ID: PAY-EMP-000123
+Salary: $120,000.00
+Bonus: $15,000.00
+
+==============================
+SECTION 8 – SOURCE CODE & IP
+==============================
+
+Proprietary Algorithm:
+double calculateRiskScore(double exposure, double volatility) {
+    return exposure * volatility * 1.37;
+}
+
+Internal API:
+https://internal-api.corp.internal/v1/process
+API_KEY=AIzaFakeGoogleAPIKey123456789
+
+Model File:
+model_weights_v3_final_2026.bin
+Training Dataset: /mnt/data/customer_transactions_2026.csv
+
+==============================
+SECTION 9 – CLOUD & DEVOPS
+==============================
+
+Kubernetes Pod: billing-service-5f8d9c7b6f-hk29p
+Node IP: 172.16.254.3
+Docker Registry:
+registry.corp.internal:5000/billing-service:2.14.7
+S3 Bucket:
+s3://corp-prod-financial-data-2026
+Azure Tenant ID:
+12345678-1234-1234-1234-123456789abc
+
+==============================
+SECTION 10 – MIXED COMPLEX COMBINATIONS
+==============================
+
+User john.doe@corp.internal accessed https://db01.internal.local from 192.168.10.45 using card 4111 1111 1111 1111 with JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature.
+
+Repeated IP:
+192.168.10.45
+192.168.10.45
+
+Repeated Email:
+john.doe@example.com
+john.doe@example.com
+
+Repeated JWT:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.payload.signature
+
+Base64 Secret:
+QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+U3VwZXJTZWNyZXRLZXkxMjM0NTY=
+
+High Entropy:
+dGhpcyBpcyBhIHZlcnkgbG9uZyB0b2tlbiB3aXRoIG1peGVkIGNhc2UgYW5kIG51bWJlcnM=
+
+================================================================================
+END OF FULL TEST DATASET
+================================================================================
+

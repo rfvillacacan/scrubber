@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scrubber - About / Readme</title>
+  <style>
+    :root { color-scheme: light; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Palatino Linotype", serif;
+      background: #f7f4ef;
+      color: #1f2a37;
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 20px 28px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #d9e1ea;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+      padding: 24px;
+    }
+    h1 { margin-top: 0; font-size: 28px; }
+    h2 { margin-top: 24px; font-size: 20px; }
+    code, pre {
+      font-family: Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+    pre {
+      background: #f8fafc;
+      border: 1px solid #d9e1ea;
+      border-radius: 8px;
+      padding: 12px;
+      overflow: auto;
+    }
+    ul { margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Scrubber - About / Readme</h1>
+      <p><strong>Version:</strong> 2.0.0 (Docker HTTPS)<br /><strong>Updated:</strong> February 24, 2026</p>
+
+      <h2>What This App Does</h2>
+      <p>Scrubber redacts sensitive values before sharing text externally, then restores original values later using session mappings.</p>
+      <ol>
+        <li>Paste raw sensitive text and click <code>Scrub</code>.</li>
+        <li>Copy scrubbed output and send to external tools.</li>
+        <li>Paste response and click <code>Restore</code>.</li>
+        <li>Verify with <code>Quick Test</code>.</li>
+      </ol>
+
+      <h2>Security Model</h2>
+      <ul>
+        <li>Runs locally.</li>
+        <li>Session mappings are stored in <code>data/session_&lt;id&gt;.sqlite</code>.</li>
+        <li>Clipboard APIs depend on browser security context.</li>
+        <li>For LAN access, use HTTPS to keep copy/paste buttons functional.</li>
+      </ul>
+
+      <h2>Docker HTTPS Run (Primary)</h2>
+      <pre>cp .env.example .env
+docker compose up -d --build</pre>
+      <p>Open: <code>https://localhost:9443</code></p>
+
+      <h2>Operations</h2>
+      <pre>docker compose ps
+docker compose logs -f web app
+docker compose down</pre>
+
+      <h2>Notes</h2>
+      <ul>
+        <li>If cert paths change, update <code>.env</code>: <code>CERT_FULLCHAIN_PATH</code> and <code>CERT_KEY_PATH</code>.</li>
+        <li>If <code>9443</code> is busy, change <code>HTTPS_PORT</code> in <code>.env</code>.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
