@@ -69,7 +69,7 @@ class RulesRegistry {
             }
 
             $flags = $rule['flags'] ?? '';
-            $pattern = '~' . $rule['pattern'] . '~' . $flags;
+            $pattern = '#' . $rule['pattern'] . '#' . $flags;
 
             if (@preg_match($pattern, '') === false) {
                 $this->logger?->warn('Rule pattern invalid', ['file' => $file, 'rule_id' => $rule['id'] ?? null]);
