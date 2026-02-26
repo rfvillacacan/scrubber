@@ -75,6 +75,13 @@ class DataGenerator {
     public static function generateUrl(string $originalUrl): string {
         // Extract host from URL
         if (!preg_match('~^([a-z][a-z0-9+.-]*):\\/\\/([^\\/:]+)~i', $originalUrl, $matches)) {
+            // Not a URL with protocol - might be hostname:port format
+            if (preg_match('~^([^\\/:]+):(\\d+)$~', $originalUrl, $hostMatches)) {
+                // hostname:port format (e.g., postgres-db.company.com:5432)
+                [$full, $host, $port] = $hostMatches;
+                $fakeDomain = self::getFakeDomain($host);
+                return $fakeDomain . ':' . $port;
+            }
             return self::generateSmartString($originalUrl);
         }
 
