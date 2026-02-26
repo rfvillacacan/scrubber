@@ -163,7 +163,7 @@ Deploying container: registry.corp.internal:5000/payment-service:2.14.7
 S3 bucket: s3://fake-invoice-bucket/Xyz9/
 Database: postgres-db.prod.internal:5432/accountdb
 Secret: AKIA9876543210ZYXWVUTSQR
-Email: jane.smith@corp.internal
+Email: user_3a2f1b@example.com
 ```
 
 **Notice what's preserved (technical context):**
@@ -178,7 +178,7 @@ Email: jane.smith@corp.internal
 - 🔒 `prod-customer-data` → `fake-invoice-bucket` (business-sensitive bucket name)
 - 🔒 `paymentdb` → `accountdb` (business-sensitive database name)
 - 🔒 `AKIA123...` → `AKIA987...` (AWS access key - secret!)
-- 🔒 `john.doe@...` → `jane.smith@...` (PII - email address)
+- 🔒 `john.doe@corp.internal` → `user_3a2f1b@example.com` (entire email scrubbed, domain replaced!)
 
 ### Scrubbing Example - Basic Data
 
