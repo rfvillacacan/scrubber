@@ -10,11 +10,20 @@ class DataGenerator {
         'mockdomain.io', 'fakedata.test', 'placeholder.co', 'testsite.org'
     ];
 
-    public static function generateEmail(): string {
+    public static function generateEmail(?string $originalEmail = null): string {
         $usernames = ['user', 'admin', 'notify', 'service', 'account'];
+
+        // If original email provided, extract its domain and get consistent fake domain
+        if ($originalEmail !== null && str_contains($originalEmail, '@')) {
+            $fakeDomain = self::getFakeDomain($originalEmail);
+        } else {
+            // No original email, pick random fake domain
+            $fakeDomain = self::$fakeDomains[array_rand(self::$fakeDomains)];
+        }
+
         return $usernames[array_rand($usernames)] . '_' .
                substr(md5((string)rand()), 0, 8) . '@' .
-               self::$fakeDomains[array_rand(self::$fakeDomains)];
+               $fakeDomain;
     }
 
     /**

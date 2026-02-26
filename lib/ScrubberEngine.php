@@ -207,8 +207,8 @@ class ScrubberEngine {
         // DataGenerator methods
         $method = 'generate' . ucfirst($generator);
         if (method_exists(DataGenerator::class, $method)) {
-            // IBAN, string, s3Bucket, dockerRegistry, and url generators need original value for format matching
-            if (in_array($generator, ['iban', 'string', 's3Bucket', 'dockerRegistry', 'url'], true)) {
+            // IBAN, string, s3Bucket, dockerRegistry, url, and email generators need original value for format/domain matching
+            if (in_array($generator, ['iban', 'string', 's3Bucket', 'dockerRegistry', 'url', 'email'], true)) {
                 return DataGenerator::$method($originalValue);
             }
             return DataGenerator::$method();
