@@ -1,15 +1,19 @@
 # Scrubber
 
-Scrubber is a local-first PHP application for reversible sensitive-data redaction.
+Scrubber is a local-first PHP application for reversible sensitive-data anonymization. It replaces sensitive values with realistic fake data while preserving data structure, making it ideal for sharing logs with external tools like AI assistants.
 
 ## Features
-- Scrub sensitive values into deterministic placeholders
-- Restore placeholders back to original values
-- Session-scoped local storage (SQLite)
-- Ruleset-based detection with enable/disable controls
-- HTTPS Docker deployment for browser clipboard compatibility
+
+- **Realistic Fake Data Generation** - Generates contextually appropriate fake data (emails, IPs, UUIDs, etc.) instead of obvious placeholders
+- **Label Preservation** - Preserves labels like "Request-ID:", "Email:", "IP:" for better troubleshooting context
+- **Consistent Mapping** - Same values always map to the same fake value throughout a document (global caching by data type)
+- **JSON-Driven Rules** - All detection patterns and generators configured in JSON files - no code changes needed to add rules
+- **Session-scoped Storage** - SQLite-based reversible mapping storage with optional encryption
+- **Priority-Based Processing** - Higher-priority rules process first to prevent overlapping matches
+- **HTTPS Docker Deployment** - Browser clipboard API compatibility for secure contexts
 
 ## Quick Start (Docker)
+
 1. Create env file:
 
 ```bash
@@ -41,21 +45,187 @@ Health check endpoint:
 https://localhost:9443/healthz.php
 ```
 
-## Project Layout
-- `index.php` - main endpoint and UI shell
-- `assets/` - frontend JavaScript and CSS
-- `lib/` - core PHP engine and storage code
-- `rules/` - bundled rulesets
-- `docs/` - documentation and in-app readme source
-- `docker/` - nginx and php-fpm container setup
+## How It Works
+
+### Scubbing Example
+
+**Input:**
+```
+Error in transaction. Request-ID: abc123def456, Customer: CUST-884422,
+Email: john@example.com, IP: 192.168.1.100, Source Account: 123456789012
+```
+
+**Output:**
+```
+Error in transaction. Request-ID: fed987-1234-5678-90ab-cdef12345678,
+Customer: CUST-4d2f28, Email: account_3a2f@example.com,
+IP: 217.89.45.112, Source Account: 987654321098
+```
+
+### Key Behaviors
+
+1. **Labels are preserved** - "Request-ID:", "Customer:", "Email:", etc. remain intact
+2. **Same value = same fake** - Multiple occurrences of `john@example.com` become the same fake email
+3. **Contextual fake data** - Emails look like emails, IPs look like IPs, UUIDs maintain format
+4. **Structure maintained** - The scrubbed text remains valid and parseable
+
+## Architecture
+
+### Project Layout
+
+```
+scrubber/
+├── index.php              # Main endpoint and UI shell
+├── assets/                # Frontend JavaScript and CSS
+├── lib/
+│   ├── ScrubberEngine.php # Generic scrubbing engine (JSON-driven)
+│   ├── RulesRegistry.php  # Loads and validates rules from JSON
+│   ├── DataGenerator.php  # Generates realistic fake data
+│   ├── Storage.php        # Session mapping storage
+│   ├── Validator.php      # Pattern validation functions
+│   └── Logger.php         # Logging utility
+├── rules/                 # Bundled rulesets (JSON configuration)
+│   ├── pii.scrubrules.json      # Personal identifiable information
+│   ├── tokens.scrubrules.json   # Credentials, tokens, secrets
+│   ├── finance.scrubrules.json  # Banking and financial data
+│   ├── pci.scrubrules.json      # Payment card data
+│   ├── network.scrubrules.json  # Network infrastructure
+│   ├── cloud.scrubrules.json    # Cloud and DevOps identifiers
+│   ├── corp.scrubrules.json     # Corporate confidential data
+│   ├── phi.scrubrules.json      # Protected health information
+│   ├── general.scrubrules.json  # General sensitive data
+│   └── banking.scrubrules.json  # Banking-specific patterns
+├── docs/                  # Documentation
+├── docker/                # nginx and php-fpm container setup
+└── data/                  # Runtime session databases (gitignored)
+```
+
+### JSON Rule Configuration
+
+All detection patterns and generation logic are configured in JSON files. No PHP code changes needed to add new rules.
+
+**Rule File Structure:**
+
+```json
+{
+    "ruleset_id": "PII",
+    "version": "1.2.2",
+    "description": "Personally identifiable information detection",
+    "author": "Security",
+    "priority_base": 800,
+    "rules": [
+        {
+            "id": "EMAIL",
+            "enabled": true,
+            "priority": 300,
+            "pattern": "\\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,})\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "email",
+            "cache_type": "global",
+            "data_type": "email",
+            "skip_length_adjust": true
+        }
+    ]
+}
+```
+
+**Rule Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier for this rule |
+| `enabled` | boolean | Whether this rule is active |
+| `priority` | integer | Rule priority (added to priority_base) |
+| `pattern` | string | Regex pattern (use capturing groups for label preservation) |
+| `flags` | string | Regex flags (e.g., "i" for case-insensitive) |
+| `validation` | string|null | Validator function name (e.g., "luhn", "jwt_structure") |
+| `generator` | string | DataGenerator method (e.g., "email", "uuid", "ipv4") |
+| `cache_type` | string | "global" for consistency across data types, "local" for unique per-rule |
+| `data_type` | string | Data type identifier for global caching |
+| `skip_length_adjust` | boolean | If true, don't adjust fake value length to match original |
+
+**Priority System:**
+
+```
+Final Priority = priority_base + rule_priority
+
+Higher priority rules process first to prevent overlaps.
+Current hierarchy:
+- PCI (1000): Payment card data
+- FINANCE (900): Banking identifiers
+- TOKENS (900): Credentials, tokens, secrets
+- PII (800): Personal identifiable information
+- PHI (850): Protected health information
+- BANKING (850): Banking-specific patterns
+- CLOUD (700): Cloud and DevOps identifiers
+- NETWORK (700): Network infrastructure
+- CORP (600): Corporate confidential data
+- GENERAL (950): General sensitive data
+```
+
+### Label Preservation with Capturing Groups
+
+Use capturing groups `(...)` to extract only the value portion, preserving labels.
+
+**Bad - Replaces entire match including label:**
+```json
+{
+    "pattern": "\\b(?:REQUEST-ID|TRACE-ID)\\s*[:=]\\s*[A-F0-9-]{16,}\\b"
+}
+```
+Result: `Request-ID: abc123` → `fed456` (label lost!)
+
+**Good - Capturing group preserves label:**
+```json
+{
+    "pattern": "\\b(?:REQUEST-ID|TRACE-ID)\\s*[:=]\\s*([A-F0-9-]{16,})\\b"
+    //                                                 ^^^^^^^^^^^^^   ← CAPTURE GROUP
+}
+```
+Result: `Request-ID: abc123` → `Request-ID: fed456` (label preserved!)
+
+### Global vs Local Caching
+
+**Global caching (`cache_type: "global"`):**
+- Same value across entire document gets same fake value
+- Used for: emails, IPs, UUIDs, customer IDs, etc.
+- `data_type` field groups same data types across different rules
+
+**Local caching (`cache_type: "local"`):**
+- Same value might get different fake values in different contexts
+- Used for: passwords, API keys, tokens, etc.
+- Each rule maintains its own cache
+
+### Available Data Generators
+
+| Generator | Output Example | Use For |
+|-----------|---------------|---------|
+| `email` | `user_3a2f1b@example.com` | Email addresses |
+| `uuid` | `8ec42f64-146f-616b-6d8d-c2abe4a0e941` | UUIDs, trace IDs |
+| `ipv4` | `217.89.45.112` | IPv4 addresses |
+| `cidr` | `172.16.0.0/12` | CIDR notation |
+| `phoneNumber` | `+1 (783) 6743-9208` | Phone numbers |
+| `personName` | `Jane Smith` | Person names |
+| `customerId` | `CUST-4d2f28` | Customer IDs |
+| `accountId` | `ACC-12345678` | Account IDs |
+| `password` | `Xy9@bB2$kL` | Passwords |
+| `jwt` | `eyJhbG...` | JWT tokens |
+| `bearerToken` | `tok_abc123xyz789` | Bearer tokens |
+| `amount` | `1250.00` | Financial amounts |
+| `string` | `aB3xY7` | Generic alphanumeric strings |
+| `creditCard` | `4532015112830366` | Credit card numbers |
 
 ## Security Notes
-- Do not commit real session databases, logs, certs, or `.env` files.
-- Clipboard features require a secure browser context (`https://` or trusted localhost).
-- Optional HTTP Basic auth is available via `APP_BASIC_AUTH_USER` and `APP_BASIC_AUTH_PASS`.
-- Session file retention can be tuned with `APP_RETENTION_DAYS` (default: `30`).
+
+- **Do not commit** real session databases, logs, certs, or `.env` files
+- **Clipboard features** require a secure browser context (`https://` or trusted localhost)
+- **Optional HTTP Basic auth** via `APP_BASIC_AUTH_USER` and `APP_BASIC_AUTH_PASS`
+- **Session retention** tuned with `APP_RETENTION_DAYS` (default: `30`)
+- **Encryption support** - Sessions can be encrypted with a passphrase
 
 ## Production Env Template
+
 Use this as a baseline `.env` for public or shared deployment:
 
 ```dotenv
@@ -70,9 +240,21 @@ APP_BASIC_AUTH_PASS=change-me-long-random-secret
 ```
 
 Minimum recommendations:
-- Use a long random `APP_BASIC_AUTH_PASS`.
-- Keep `APP_RETENTION_DAYS` low for shared deployments.
-- Never commit `.env` or real certificate/key files.
+- Use a long random `APP_BASIC_AUTH_PASS`
+- Keep `APP_RETENTION_DAYS` low for shared deployments
+- Never commit `.env` or real certificate/key files
+
+## Adding Custom Rules
+
+1. Create a new `.scrubrules.json` file in the `rules/` directory
+2. Follow the rule structure shown above
+3. Use capturing groups for label preservation
+4. Choose appropriate generator, cache_type, and data_type
+5. Set appropriate priority to avoid conflicts
+6. Restart the application to load new rules
+
+No code changes required - the ScrubberEngine automatically loads all rules from JSON.
 
 ## License
+
 MIT. See `LICENSE`.

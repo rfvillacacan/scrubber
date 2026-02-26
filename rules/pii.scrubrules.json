@@ -8,58 +8,78 @@
         {
             "id": "EMAIL",
             "enabled": true,
-            "priority": 130,
-            "pattern": "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b",
+            "priority": 300,
+            "pattern": "\\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "email",
+            "cache_type": "global",
+            "data_type": "email",
+            "skip_length_adjust": true
         },
         {
             "id": "PHONE_LABEL",
             "enabled": true,
             "priority": 120,
-            "pattern": "\\b(?:PHONE|MOBILE|TEL|CONTACT)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]\\s*\\+?\\d[\\d\\s().-]{6,}\\b",
+            "pattern": "\\b(?:PHONE|MOBILE|TEL|CONTACT)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]\\s*(\\+?\\d[\\d\\s().-]{6,})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "phoneNumber",
+            "cache_type": "global",
+            "data_type": "phone",
+            "skip_length_adjust": true
         },
         {
             "id": "SSN",
             "enabled": true,
             "priority": 115,
-            "pattern": "\\b(?:SSN|SOCIAL|TAXPAYER ID|TIN)\\s*[:=]?\\s*\\d{3}-\\d{2}-\\d{4}\\b",
+            "pattern": "\\b(?:SSN|SOCIAL|TAXPAYER ID|TIN)\\s*[:=]?\\s*(\\d{3}-\\d{2}-\\d{4})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "global",
+            "data_type": "ssn"
         },
         {
             "id": "PASSPORT",
             "enabled": true,
             "priority": 110,
-            "pattern": "\\b(?:PASSPORT|PPN)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]?\\s*[A-Z0-9]{6,9}\\b",
+            "pattern": "\\b(?:PASSPORT|PPN)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]?\\s*([A-Z0-9]{6,9})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local"
         },
         {
             "id": "DRIVER_LICENSE",
             "enabled": true,
             "priority": 108,
-            "pattern": "\\b(?:DL|DRIVER(?:'|)?S?\\s*LICEN[CS]E)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]?\\s*[A-Z0-9-]{5,20}\\b",
+            "pattern": "\\b(?:DL|DRIVER(?:'|)?S?\\s*LICEN[CS]E)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]?\\s*([A-Z0-9-]{5,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local"
         },
         {
             "id": "NATIONAL_ID_GENERIC",
             "enabled": true,
             "priority": 106,
-            "pattern": "\\b(?:NATIONAL ID|NID|GOVT ID|ID NUMBER)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "pattern": "\\b(?:NATIONAL ID|NID|GOVT ID|ID NUMBER|CUSTOMER-ID|CUST-ID|CLIENT-ID)\\s*(?:\\([A-Z]{2}\\))?\\s*[:=]?\\s*([A-Za-z0-9-]{6,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "customerId",
+            "cache_type": "global",
+            "data_type": "national_id"
         },
         {
             "id": "DOB",
             "enabled": true,
             "priority": 104,
-            "pattern": "\\b(?:DOB|DATE OF BIRTH)\\s*[:=]?\\s*(?:\\d{4}[-\\/.](?:0[1-9]|1[0-2])[-\\/.](?:0[1-9]|[12][0-9]|3[01])|(?:0[1-9]|1[0-2])[-\\/.](?:0[1-9]|[12][0-9]|3[01])[-\\/.]\\d{4})\\b",
+            "pattern": "\\b(?:DOB|DATE OF BIRTH)\\s*[:=]?\\s*((?:\\d{4}[-\\/.](?:0[1-9]|1[0-2])[-\\/.](?:0[1-9]|[12][0-9]|3[01])|(?:0[1-9]|1[0-2])[-\\/.](?:0[1-9]|[12][0-9]|3[01])[-\\/.]\\d{4}))\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local"
         },
         {
             "id": "GEO_COORD",
@@ -67,31 +87,116 @@
             "priority": 102,
             "pattern": "\\b-?(?:180(?:\\.0+)?|1[0-7]\\d(?:\\.\\d+)?|\\d{1,2}(?:\\.\\d+)?),\\s*-?(?:180(?:\\.0+)?|1[0-7]\\d(?:\\.\\d+)?|\\d{1,2}(?:\\.\\d+)?)\\b",
             "flags": "",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "geo_coord"
         },
         {
             "id": "PERSON_NAME_LABEL",
             "enabled": true,
             "priority": 100,
-            "pattern": "\\b(?:FULL NAME|NAME)\\s*[:=]\\s*[A-Z][A-Za-z.'-]+(?:\\s+[A-Z][A-Za-z.'-]+){1,3}\\b",
+            "pattern": "\\b(?:FULL NAME|NAME)\\s*[:=]\\s*([A-Z][A-Za-z.'-]+(?:\\s+[A-Z][A-Za-z.'-]+){1,3})\\b",
             "flags": "",
-            "validation": null
+            "validation": null,
+            "generator": "personName",
+            "cache_type": "global",
+            "data_type": "person_name"
         },
         {
             "id": "ALTERNATE_NAME",
             "enabled": true,
             "priority": 98,
-            "pattern": "\\b(?:ALTERNATE FORMAT|ALT NAME|ALIAS NAME)\\s*[:=]\\s*[A-Z][A-Z' -]+,\\s*[A-Z][A-Z' -]+\\b",
+            "pattern": "\\b(?:ALTERNATE FORMAT|ALT NAME|ALIAS NAME)\\s*[:=]\\s*([A-Z][A-Z' -]+,\\s*[A-Z][A-Z' -]+)\\b",
             "flags": "",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local"
         },
         {
             "id": "ADDRESS_LINE",
             "enabled": true,
             "priority": 95,
-            "pattern": "\\b\\d{1,6}\\s+[A-Za-z0-9.'-]+(?:\\s+[A-Za-z0-9.'-]+){0,6},\\s*[A-Za-z .'-]+,\\s*[A-Z]{2}\\s*\\d{5}(?:-\\d{4})?\\b",
+            "pattern": "(\\b\\d{1,6}\\s+[A-Za-z0-9.'-]+(?:\\s+[A-Za-z0-9.'-]+){0,6},\\s*[A-Za-z .'-]+,\\s*[A-Z]{2}\\s*\\d{5}(?:-\\d{4})?\\b)",
             "flags": "",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local"
+        },
+        {
+            "id": "SPECIFIC_CUSTOMER_ID",
+            "enabled": false,
+            "priority": 1,
+            "pattern": "(Customer-ID: CUST-884422)",
+            "flags": "i",
+            "validation": null,
+            "generator": "customerId",
+            "cache_type": "local"
+        },
+        {
+            "id": "SPECIFIC_SOURCE_ACCOUNT",
+            "enabled": false,
+            "priority": 2,
+            "pattern": "(sourceAccount: 123456789012)",
+            "flags": "i",
+            "validation": null,
+            "generator": "accountId",
+            "cache_type": "local"
+        },
+        {
+            "id": "SPECIFIC_ACCOUNT_LOG",
+            "enabled": false,
+            "priority": 3,
+            "pattern": "(Account 123456789012 found)",
+            "flags": "i",
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local"
+        },
+        {
+            "id": "CUSTOMER_ID",
+            "enabled": true,
+            "priority": 107,
+            "pattern": "\\b(CUST-[A-Za-z0-9-]{6,20})\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "customerId",
+            "cache_type": "global",
+            "data_type": "customer_id",
+            "skip_length_adjust": true
+        },
+        {
+            "id": "BANK_ACCOUNT",
+            "enabled": false,
+            "priority": 108,
+            "pattern": "\\b(\\d{9,18})\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "accountId",
+            "cache_type": "local"
+        },
+        {
+            "id": "ACCOUNT_ID",
+            "enabled": true,
+            "priority": 109,
+            "pattern": "\\b(ACC-\\d{6,})\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "accountId",
+            "cache_type": "global",
+            "data_type": "account_id",
+            "skip_length_adjust": true
+        },
+        {
+            "id": "CARDHOLDER_NAME",
+            "enabled": true,
+            "priority": 96,
+            "pattern": "\\bCardholder:\\s*([A-Z][A-Za-z.'-]+(?:\\s+[A-Z][A-Za-z.'-]+){1,3})\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "personName",
+            "cache_type": "global",
+            "data_type": "person_name"
         }
     ]
 }

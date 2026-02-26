@@ -83,7 +83,12 @@ class RulesRegistry {
                 'regex' => $pattern,
                 'validator' => $rule['validation'] ?? null,
                 'final_priority' => $priorityBase + (int)$rule['priority'],
-                'enabled' => $enabled
+                'enabled' => $enabled,
+                // NEW: Configuration fields loaded from JSON
+                'generator' => $rule['generator'] ?? null,
+                'cache_type' => $rule['cache_type'] ?? 'local',
+                'data_type' => $rule['data_type'] ?? null,
+                'skip_length_adjust' => $rule['skip_length_adjust'] ?? false,
             ];
         }
     }

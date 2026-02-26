@@ -9,97 +9,134 @@
             "id": "INVOICE",
             "enabled": true,
             "priority": 120,
-            "pattern": "\\b(?:INVOICE|INV)\\s*(?:NO|NUMBER)?\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "pattern": "\\b(?:INVOICE|INV)\\s*(?:NO|NUMBER)?\\s*[:=]?\\s*([A-Z0-9-]{6,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "invoice"
         },
         {
             "id": "PURCHASE_ORDER",
             "enabled": true,
             "priority": 118,
-            "pattern": "\\b(?:PURCHASE ORDER|PO)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "pattern": "\\b(?:PURCHASE ORDER|PO)\\s*[:=]?\\s*([A-Z0-9-]{6,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "purchase_order"
         },
         {
             "id": "CONTRACT",
             "enabled": true,
             "priority": 116,
-            "pattern": "\\b(?:CONTRACT|CNT)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "pattern": "\\b(?:CONTRACT|CNT)\\s*[:=]?\\s*([A-Z0-9-]{6,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "contract"
         },
         {
             "id": "BOARD_MEETING",
             "enabled": true,
             "priority": 114,
-            "pattern": "\\b(?:BOARD MEETING|BM)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "pattern": "\\b(?:BOARD MEETING|BM)\\s*[:=]?\\s*([A-Z0-9-]{6,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "board_meeting"
         },
         {
             "id": "DOC_ID",
             "enabled": true,
             "priority": 112,
-            "pattern": "\\b(?:DOCUMENT ID|DOC ID|DOC-INT)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "pattern": "\\b(?:DOCUMENT ID|DOC ID|DOC-INT)\\s*[:=]?\\s*([A-Z0-9-]{6,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "doc_id"
         },
         {
             "id": "CLIENT_LIST",
             "enabled": true,
             "priority": 110,
-            "pattern": "\\b(?:CLIENT LIST)\\s*[:=]?\\s*[A-Za-z0-9 ,.'-]{3,100}\\b",
+            "pattern": "\\b(?:CLIENT LIST)\\s*[:=]?\\s*([A-Za-z0-9 ,.'-]{3,100})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "client_list"
         },
         {
             "id": "GL_ACCOUNT",
             "enabled": true,
             "priority": 108,
-            "pattern": "\\bGL\\s*ACCOUNT\\s*[:=]?\\s*[A-Z0-9-]{4,20}\\b",
+            "pattern": "\\bGL\\s*ACCOUNT\\s*[:=]?\\s*([A-Z0-9-]{4,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "gl_account"
         },
         {
             "id": "BANK_TRANSFER_REF",
             "enabled": true,
             "priority": 106,
-            "pattern": "\\b(?:BANK TRANSFER REF|TRX)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "pattern": "\\b(?:BANK TRANSFER REF|TRX)\\s*[:=]?\\s*([A-Z0-9-]{6,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "bank_transfer_ref"
         },
         {
             "id": "TAX_ID",
             "enabled": true,
             "priority": 104,
-            "pattern": "\\b(?:TAX ID)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "pattern": "\\b(?:TAX ID)\\s*[:=]?\\s*([A-Z0-9-]{6,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "tax_id"
         },
         {
             "id": "VAT_NUMBER",
             "enabled": true,
             "priority": 103,
-            "pattern": "\\b(?:VAT NUMBER|VAT)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "pattern": "\\b(?:VAT NUMBER|VAT)\\s*[:=]?\\s*([A-Z0-9-]{6,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "vat_number"
         },
         {
             "id": "PAYROLL_ID",
             "enabled": true,
             "priority": 102,
-            "pattern": "\\b(?:PAYROLL ID|PAY-EMP)\\s*[:=]?\\s*[A-Z0-9-]{6,20}\\b",
+            "pattern": "\\b(?:PAYROLL ID|PAY-EMP)\\s*[:=]?\\s*([A-Z0-9-]{6,20})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "payroll_id"
         },
         {
             "id": "SALARY_BONUS",
             "enabled": true,
             "priority": 100,
-            "pattern": "\\b(?:SALARY|BONUS)\\s*[:=]?\\s*\\$?\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?\\b",
+            "pattern": "\\b(?:SALARY|BONUS)\\s*[:=]?\\s*\\$?(\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?)\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "amount",
+            "cache_type": "global",
+            "data_type": "amount",
+            "skip_length_adjust": true
         }
     ]
 }

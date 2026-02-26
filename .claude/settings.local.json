@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(docker compose:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(curl:*)",
+      "Bash(docker rm:*)",
+      "Bash(start http://localhost:8080)",
+      "Bash(php:*)"
     ]
   }
 }

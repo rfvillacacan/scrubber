@@ -12,6 +12,7 @@ require_once __DIR__ . '/lib/Storage.php';
 require_once __DIR__ . '/lib/Validator.php';
 require_once __DIR__ . '/lib/Logger.php';
 require_once __DIR__ . '/lib/Crypto.php';
+require_once __DIR__ . '/lib/DataGenerator.php';
 
 function getServerVar(string $key): string {
     return isset($_SERVER[$key]) ? (string)$_SERVER[$key] : '';

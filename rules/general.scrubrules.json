@@ -1,0 +1,131 @@
+{
+    "ruleset_id": "GENERAL_SENSITIVE",
+    "version": "1.0.0",
+    "description": "General sensitive data detection - catches continuous strings and network identifiers",
+    "author": "Security",
+    "priority_base": 950,
+    "rules": [
+        {
+            "id": "CONTINUOUS_DIGITS",
+            "enabled": false,
+            "priority": 100,
+            "pattern": "\\b\\d{9,18}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "ALPHA_NUM_SEQUENCE",
+            "enabled": false,
+            "priority": 101,
+            "pattern": "\\b[A-Za-z0-9]{12,}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "CUSTOMER_ID_GENERAL",
+            "enabled": true,
+            "priority": 102,
+            "pattern": "\\bCUST-[A-Za-z0-9-]{6,20}\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "customerId",
+            "cache_type": "global",
+            "data_type": "customer_id",
+            "skip_length_adjust": true
+        },
+        {
+            "id": "INTERNAL_HOST",
+            "enabled": false,
+            "priority": 103,
+            "pattern": "\\b[A-Za-z0-9.-]+\\.internal\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "IPV4_ADDRESS",
+            "enabled": true,
+            "priority": 104,
+            "pattern": "\\b((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "ipv4",
+            "cache_type": "global",
+            "data_type": "ipv4",
+            "skip_length_adjust": true
+        },
+        {
+            "id": "CIDR_NOTATION",
+            "enabled": true,
+            "priority": 105,
+            "pattern": "\\b((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\/(?:3[0-2]|[12]?\\d))\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "cidr",
+            "cache_type": "global",
+            "data_type": "cidr",
+            "skip_length_adjust": true
+        },
+        {
+            "id": "CONTINUOUS_HEX",
+            "enabled": false,
+            "priority": 106,
+            "pattern": "\\b[0-9a-fA-F]{16,}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "UUID_PATTERN",
+            "enabled": false,
+            "priority": 107,
+            "pattern": "\\b([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "uuid",
+            "cache_type": "global",
+            "data_type": "uuid",
+            "skip_length_adjust": true
+        },
+        {
+            "id": "PORT_NUMBER",
+            "enabled": false,
+            "priority": 108,
+            "pattern": "\\bport\\s*[:=]?\\s*[0-9]{1,5}\\b",
+            "flags": "i",
+            "validation": null
+        },
+        {
+            "id": "VERSION_NUMBER",
+            "enabled": true,
+            "priority": 109,
+            "pattern": "\\b(?:VERSION|VER|V)\\s*[:=]?\\s*([0-9]+\\.[0-9]+(?:\\.[0-9]+)?)\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "version"
+        },
+        {
+            "id": "REGION_NAME",
+            "enabled": true,
+            "priority": 110,
+            "pattern": "\\bREGION\\s*[:=]?\\s*([a-z]+-[a-z]+-[0-9]+)\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "region"
+        },
+        {
+            "id": "FINANCIAL_AMOUNT",
+            "enabled": true,
+            "priority": 111,
+            "pattern": "\\bAmount\\s*:\\s*([0-9]+\\.[0-9]{2})\\s*(?:USD|EUR|GBP|CAD|AUD|JPY)?\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "amount",
+            "cache_type": "global",
+            "data_type": "amount",
+            "skip_length_adjust": true
+        }
+    ]
+}

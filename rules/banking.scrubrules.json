@@ -1,0 +1,45 @@
+{
+    "ruleset_id": "BANKING",
+    "version": "1.0.0",
+    "description": "Banking-specific sensitive data detection",
+    "author": "Security",
+    "priority_base": 850,
+    "rules": [
+        {
+            "id": "BANK_CUSTOMER_ID",
+            "enabled": true,
+            "priority": 105,
+            "pattern": "\\bCustomer-ID:\\s*(CUST-[A-Za-z0-9-]{6,20})\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "customerId",
+            "cache_type": "global",
+            "data_type": "customer_id",
+            "skip_length_adjust": true
+        },
+        {
+            "id": "BANK_ACCOUNT_NUMBER",
+            "enabled": true,
+            "priority": 104,
+            "pattern": "\\b(?:source|account)Account:\\s*\"?(\\d{9,18})\"?\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "accountId",
+            "cache_type": "global",
+            "data_type": "account_id",
+            "skip_length_adjust": true
+        },
+        {
+            "id": "BANK_ACCOUNT_LOG",
+            "enabled": true,
+            "priority": 103,
+            "pattern": "\\bAccount\\s+(\\d{9,18})\\s+found\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "accountId",
+            "cache_type": "global",
+            "data_type": "account_id",
+            "skip_length_adjust": true
+        }
+    ]
+}

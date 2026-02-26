@@ -11,7 +11,10 @@
             "priority": 120,
             "pattern": "\\bs3:\\/\\/[a-z0-9.-]{3,63}\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "s3_bucket"
         },
         {
             "id": "DOCKER_REGISTRY",
@@ -19,15 +22,22 @@
             "priority": 115,
             "pattern": "\\b[a-z0-9.-]+\\.(?:corp|internal|local|lan)(?::\\d{2,5})?\\/[A-Za-z0-9._-]+(?::[A-Za-z0-9._-]+)?\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "string",
+            "cache_type": "local",
+            "data_type": "docker_registry"
         },
         {
             "id": "AZURE_TENANT_ID",
             "enabled": true,
             "priority": 110,
-            "pattern": "\\b(?:AZURE TENANT ID|TENANT ID)\\s*[:=]?\\s*[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\b",
+            "pattern": "\\b(?:AZURE TENANT ID|TENANT ID)\\s*[:=]?\\s*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\\b",
             "flags": "i",
-            "validation": null
+            "validation": null,
+            "generator": "uuid",
+            "cache_type": "global",
+            "data_type": "uuid",
+            "skip_length_adjust": true
         }
     ]
 }
