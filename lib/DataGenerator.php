@@ -351,7 +351,8 @@ class DataGenerator {
     }
 
     public static function generateDockerRegistry(string $originalDocker): string {
-        if (!preg_match('/^([a-z0-9.-]+\\.(?:corp|internal|local|lan))(?::(\\d{2,5}))?\\/([A-Za-z0-9._-]+)(?::([A-Za-z0-9._-]+))?$/i', $originalDocker, $matches)) {
+        // Updated pattern to match ANY domain, not just internal ones
+        if (!preg_match('/^([a-z0-9.-]+\\.[a-z]{2,})(?::(\\d{2,5}))\\/([A-Za-z0-9._-]+)(?::([A-Za-z0-9._-]+))?$/i', $originalDocker, $matches)) {
             return self::generateSmartString($originalDocker);
         }
 
@@ -360,35 +361,30 @@ class DataGenerator {
         $service = $matches[3];
         $tag = $matches[4] ?? '';
 
+        // Use consistent domain mapping for all domains
+        $fakeDomain = self::getFakeDomain($domain);
+
         // Analyze service name to determine if it's sensitive
         $serviceFormat = self::analyzeValueFormat($service);
-        $domainFormat = self::analyzeValueFormat($domain);
 
-        // Common default registries that are NOT sensitive
-        $commonRegistries = [
-            'registry.corp.internal', 'registry.internal', 'registry.local',
-            'docker.registry', 'docker.local', 'docker.internal',
-            'registry.corp', 'registry'
+        // Common service names that are NOT sensitive (technical infrastructure)
+        $commonServices = [
+            'redis', 'postgres', 'mysql', 'mongodb', 'nginx', 'apache',
+            'vault', 'consul', 'grafana', 'prometheus', 'alertmanager',
+            'elasticsearch', 'kibana', 'logstash', 'rabbitmq', 'kafka',
+            'auth', 'api', 'web', 'app', 'frontend', 'backend',
+            'cache', 'db', 'queue', 'worker', 'proxy', 'gateway'
         ];
 
-        // Preserve common registry domains
-        if (in_array(strtolower($domain), $commonRegistries, true)) {
-            $fakeDomain = $domain;
-        } else {
-            // Scrub domain only if it looks like a business-sensitive name
-            if ($domainFormat['is_secret_like'] || self::containsBusinessTerms($domain)) {
-                $fakeDomain = self::generateSmartString($domain);
-            } else {
-                $fakeDomain = $domain;  // Technical context, preserve
-            }
-        }
-
-        // Scrub service only if it looks like business-sensitive data
-        // Low entropy, known tech names, or generic functional names are preserved
-        if ($serviceFormat['is_secret_like'] || self::containsBusinessTerms($service)) {
+        // Preserve common technical service names
+        if (in_array(strtolower($service), $commonServices, true)) {
+            $fakeService = $service;
+        } elseif ($serviceFormat['is_secret_like'] || self::containsBusinessTerms($service)) {
+            // Scrub business-sensitive or high-entropy service names
             $fakeService = self::generateSmartString($service);
         } else {
-            $fakeService = $service;  // Technical context (redis, postgres, etc.), preserve
+            // Low entropy generic name, preserve
+            $fakeService = $service;
         }
 
         // Preserve version/tag unchanged - it's technical context, not sensitive

@@ -18,6 +18,18 @@
             "skip_length_adjust": false
         },
         {
+            "id": "DATABASE_HOSTNAME",
+            "enabled": true,
+            "priority": 116,
+            "pattern": "\\b[a-z0-9.-]+\\.[a-z]{2,}:\\d{2,5}\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "url",
+            "cache_type": "global",
+            "data_type": "url",
+            "skip_length_adjust": false
+        },
+        {
             "id": "DOCKER_REGISTRY",
             "enabled": true,
             "priority": 115,
@@ -27,18 +39,6 @@
             "generator": "dockerRegistry",
             "cache_type": "local",
             "data_type": "docker_registry",
-            "skip_length_adjust": false
-        },
-        {
-            "id": "DATABASE_HOSTNAME",
-            "enabled": true,
-            "priority": 114,
-            "pattern": "\\b[a-z0-9.-]+\\.[a-z]{2,}:\\d{2,5}\\b",
-            "flags": "i",
-            "validation": null,
-            "generator": "url",
-            "cache_type": "global",
-            "data_type": "url",
             "skip_length_adjust": false
         },
         {
