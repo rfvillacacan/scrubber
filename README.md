@@ -14,35 +14,130 @@ Scrubber is a local-first PHP application for reversible sensitive-data anonymiz
 
 ## Quick Start (Docker)
 
-1. Create env file:
+Choose between **HTTP** (simpler, for local development) or **HTTPS** (required for clipboard features and production).
+
+### Option 1: HTTP Deployment (Simpler - No Certificates Required)
+
+1. **Create env file:**
 
 ```bash
 cp .env.example .env
 ```
 
-2. Provide TLS cert and key:
+2. **Configure HTTP port (optional):**
 
-```text
-certs/fullchain.crt
-certs/private.key
+Edit `.env` to set your preferred HTTP port (default is `8080`):
+
+```bash
+HTTP_PORT=8080
+APP_RETENTION_DAYS=30
 ```
 
-3. Start:
+3. **Start containers:**
 
 ```bash
 docker compose up -d --build
 ```
 
-4. Open:
+4. **Verify deployment:**
 
-```text
+```bash
+# Check container status
+docker compose ps
+
+# Test health endpoint
+curl http://localhost:8080/healthz.php
+```
+
+5. **Access the application:**
+
+```
+http://localhost:8080
+```
+
+### Option 2: HTTPS Deployment (Required for Clipboard Features)
+
+HTTPS is required for browser clipboard API access and recommended for production use.
+
+1. **Create env file:**
+
+```bash
+cp .env.example .env
+```
+
+2. **Provide TLS certificates:**
+
+Place your SSL certificates in the `certs/` directory:
+
+```bash
+mkdir -p certs
+# Copy your certificates to:
+certs/fullchain.crt
+certs/private.key
+```
+
+**For development/testing, generate self-signed certificates:**
+
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout certs/private.key \
+  -out certs/fullchain.crt \
+  -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
+```
+
+3. **Configure HTTPS port (optional):**
+
+Edit `.env` to set your preferred HTTPS port (default is `9443`):
+
+```bash
+HTTPS_PORT=9443
+CERT_FULLCHAIN_PATH=./certs/fullchain.crt
+CERT_KEY_PATH=./certs/private.key
+APP_RETENTION_DAYS=30
+```
+
+4. **Start containers:**
+
+```bash
+docker compose up -d --build
+```
+
+5. **Verify deployment:**
+
+```bash
+# Check container status
+docker compose ps
+
+# Test health endpoint (use -k for self-signed certs)
+curl -k https://localhost:9443/healthz.php
+```
+
+6. **Access the application:**
+
+```
 https://localhost:9443
 ```
 
-Health check endpoint:
+If using self-signed certificates, accept the security warning in your browser.
 
-```text
-https://localhost:9443/healthz.php
+### Useful Docker Commands
+
+```bash
+# View application logs
+docker compose logs -f app
+docker compose logs -f web
+
+# Stop the application
+docker compose down
+
+# Restart the application
+docker compose restart
+
+# Rebuild after code changes
+docker compose up -d --build
+
+# Check container health
+docker compose ps
 ```
 
 ## How It Works
