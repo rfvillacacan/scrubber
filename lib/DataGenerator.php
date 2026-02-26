@@ -146,19 +146,32 @@ class DataGenerator {
         return sprintf('%03d', rand(100, 999));
     }
 
-    public static function generateBearerToken(): string {
+    public static function generateBearerToken(string $originalValue = ''): string {
+        // Check if the original value is a JWT (starts with eyJ, has 2+ dots)
+        if (self::isJWT($originalValue)) {
+            return self::generateJWT();
+        }
+
+        // Generate random bearer token
         $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-';
         $token = '';
         for ($i = 0; $i < 40; $i++) {
             $token .= $chars[mt_rand(0, strlen($chars) - 1)];
         }
-        return 'Bearer ' . $token;
+        return $token;
+    }
+
+    private static function isJWT(string $value): bool {
+        // JWT starts with eyJ (base64 of {"alg":"HS256","typ":"JWT"})
+        // and has 2 or more parts separated by dots
+        return (str_starts_with($value, 'eyJ') && substr_count($value, '.') >= 2);
     }
 
     public static function generateJWT(): string {
-        $header = base64_encode(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
-        $payload = base64_encode(json_encode(['sub' => self::generateEmail(), 'exp' => time() + 3600]));
-        $signature = substr(md5((string)rand()), 0, 43);
+        // Use Base64URL encoding (no padding) for valid JWT format
+        $header = rtrim(strtr(base64_encode(json_encode(['alg' => 'HS256', 'typ' => 'JWT'])), '+/', '-_'), '=');
+        $payload = rtrim(strtr(base64_encode(json_encode(['sub' => self::generateEmail(), 'exp' => time() + 3600])), '+/', '-_'), '=');
+        $signature = rtrim(strtr(substr(md5((string)rand()), 0, 43), '+/', '-_'), '=');
         return $header . '.' . $payload . '.' . $signature;
     }
 
