@@ -10,11 +10,12 @@
             "enabled": true,
             "priority": 130,
             "pattern": "\\b(?:PATIENT NAME|PATIENT)\\s*[:=]\\s*([A-Z][A-Za-z.'-]+(?:\\s+[A-Z][A-Za-z.'-]+){1,3})\\b",
-            "flags": "",
+            "flags": "i",
             "validation": null,
             "generator": "personName",
             "cache_type": "global",
-            "data_type": "person_name"
+            "data_type": "person_name",
+            "normalize": "lower"
         },
         {
             "id": "MRN",

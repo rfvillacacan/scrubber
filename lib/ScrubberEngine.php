@@ -69,6 +69,7 @@ class ScrubberEngine {
                     continue;
                 }
 
+                // Use ORIGINAL value (case-sensitive) for hash to avoid collisions
                 $hash = substr(hash('sha256', $matchValue), 0, 10);
                 $replacement = $this->generateReplacement($rule, $matchValue);
 
@@ -139,6 +140,9 @@ class ScrubberEngine {
 
     private function generateReplacement(array $rule, string $originalValue): string {
         $ruleId = $rule['rule_id'];
+
+        // Use ORIGINAL value (case-sensitive) for hash to avoid collisions
+        // Normalization is only for matching logic, not for unique identification
         $hash = substr(hash('sha256', $originalValue), 0, 10);
 
         // Determine cache type from rule config (default: local)
@@ -188,14 +192,14 @@ class ScrubberEngine {
         $generator = $rule['generator'] ?? null;
 
         if (!$generator) {
-            return DataGenerator::generateString(strlen($originalValue));
+            return DataGenerator::generateSmartString($originalValue);
         }
 
         // Parse generator: "method" or "class::method"
         if (str_contains($generator, '::')) {
             [$class, $method] = explode('::', $generator, 2);
             if (!class_exists($class) || !method_exists($class, $method)) {
-                return DataGenerator::generateString(strlen($originalValue));
+                return DataGenerator::generateSmartString($originalValue);
             }
             return $class::$method();
         }
@@ -203,10 +207,14 @@ class ScrubberEngine {
         // DataGenerator methods
         $method = 'generate' . ucfirst($generator);
         if (method_exists(DataGenerator::class, $method)) {
+            // IBAN, string, s3Bucket, and dockerRegistry generators need original value for format matching
+            if (in_array($generator, ['iban', 'string', 's3Bucket', 'dockerRegistry'], true)) {
+                return DataGenerator::$method($originalValue);
+            }
             return DataGenerator::$method();
         }
 
-        return DataGenerator::generateString(strlen($originalValue));
+        return DataGenerator::generateSmartString($originalValue);
     }
 
     private function isOverlapping(int $start, int $end, array $occupied): bool {
@@ -230,5 +238,16 @@ class ScrubberEngine {
             }
         }
         return $ranges;
+    }
+
+    private function normalizeValue(array $rule, string $value): string {
+        $normalize = $rule['normalize'] ?? null;
+        if ($normalize === 'lower') {
+            return strtolower($value);
+        }
+        if ($normalize === 'upper') {
+            return strtoupper($value);
+        }
+        return $value;
     }
 }

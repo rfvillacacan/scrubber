@@ -15,6 +15,7 @@
             "generator": "email",
             "cache_type": "global",
             "data_type": "email",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {
@@ -97,18 +98,19 @@
             "enabled": true,
             "priority": 100,
             "pattern": "\\b(?:FULL NAME|NAME)\\s*[:=]\\s*([A-Z][A-Za-z.'-]+(?:\\s+[A-Z][A-Za-z.'-]+){1,3})\\b",
-            "flags": "",
+            "flags": "i",
             "validation": null,
             "generator": "personName",
             "cache_type": "global",
-            "data_type": "person_name"
+            "data_type": "person_name",
+            "normalize": "lower"
         },
         {
             "id": "ALTERNATE_NAME",
             "enabled": true,
             "priority": 98,
             "pattern": "\\b(?:ALTERNATE FORMAT|ALT NAME|ALIAS NAME)\\s*[:=]\\s*([A-Z][A-Z' -]+,\\s*[A-Z][A-Z' -]+)\\b",
-            "flags": "",
+            "flags": "i",
             "validation": null,
             "generator": "string",
             "cache_type": "local"
@@ -163,6 +165,7 @@
             "generator": "customerId",
             "cache_type": "global",
             "data_type": "customer_id",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {
@@ -185,6 +188,7 @@
             "generator": "accountId",
             "cache_type": "global",
             "data_type": "account_id",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {

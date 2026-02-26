@@ -12,7 +12,7 @@
             "pattern": "\\b[A-Z]{2}\\d{2}[A-Z0-9]{11,30}\\b",
             "flags": "i",
             "validation": "iban",
-            "generator": "string",
+            "generator": "iban",
             "cache_type": "global",
             "data_type": "iban",
             "skip_length_adjust": true
@@ -50,6 +50,7 @@
             "generator": "accountId",
             "cache_type": "global",
             "data_type": "account_id",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {

@@ -39,6 +39,7 @@
             "generator": "string",
             "cache_type": "global",
             "data_type": "ipv6",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {
@@ -62,6 +63,7 @@
             "generator": "string",
             "cache_type": "local",
             "data_type": "mac",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {

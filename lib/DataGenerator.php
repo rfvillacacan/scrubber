@@ -123,12 +123,205 @@ class DataGenerator {
         return 'CUST-' . substr(md5((string)mt_rand()), 0, 6);
     }
 
-    public static function generateString(int $length = 10): string {
+    public static function generateString(int|string $lengthOrOriginal = 10): string {
+        // If original value is passed (string), use smart generation
+        if (is_string($lengthOrOriginal)) {
+            return self::generateSmartString($lengthOrOriginal);
+        }
+
+        // Legacy behavior: generate random string of specified length
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $result = '';
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $lengthOrOriginal; $i++) {
             $result .= $chars[mt_rand(0, strlen($chars) - 1)];
         }
         return $result;
+    }
+
+    private static function analyzeValueFormat(string $value): array {
+        $format = [
+            'length' => strlen($value),
+            'has_upper' => false,
+            'has_lower' => false,
+            'has_digits' => false,
+            'special_chars' => '',
+            'special_positions' => [],
+            'entropy' => 0.0,
+            'is_high_entropy' => false,
+            'is_secret_like' => false
+        ];
+
+        for ($i = 0; $i < strlen($value); $i++) {
+            $char = $value[$i];
+            if (ctype_upper($char)) {
+                $format['has_upper'] = true;
+            } elseif (ctype_lower($char)) {
+                $format['has_lower'] = true;
+            } elseif (ctype_digit($char)) {
+                $format['has_digits'] = true;
+            } else {
+                $format['special_chars'] .= $char;
+                $format['special_positions'][] = ['char' => $char, 'pos' => $i];
+            }
+        }
+
+        // Calculate Shannon entropy
+        $format['entropy'] = self::calculateEntropy($value);
+
+        // Detect if value looks like a secret/token/key
+        $format['is_high_entropy'] = $format['entropy'] > 4.5;
+        $format['is_secret_like'] = self::isSecretLike($value, $format);
+
+        return $format;
+    }
+
+    private static function calculateEntropy(string $value): float {
+        $freq = [];
+        $len = strlen($value);
+        for ($i = 0; $i < $len; $i++) {
+            $char = $value[$i];
+            $freq[$char] = ($freq[$char] ?? 0) + 1;
+        }
+
+        $entropy = 0.0;
+        foreach ($freq as $count) {
+            $p = $count / $len;
+            $entropy -= $p * log($p, 2);
+        }
+        return $entropy;
+    }
+
+    private static function isSecretLike(string $value, array $format): bool {
+        // Long strings with high entropy are likely secrets
+        if ($format['length'] > 20 && $format['is_high_entropy']) {
+            return true;
+        }
+
+        // Mixed case + numbers + special chars = likely secret
+        if ($format['has_upper'] && $format['has_lower'] &&
+            $format['has_digits'] && strlen($format['special_chars']) > 0) {
+            return true;
+        }
+
+        // Common secret prefixes
+        $secretPrefixes = ['AKIA', 'sk_', 'pk_', 'Bearer', 'Basic', 'eyJ', 'ghp_', 'gho_', 'ghu_'];
+        foreach ($secretPrefixes as $prefix) {
+            if (str_starts_with($value, $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function generateSmartString(string $originalValue): string {
+        $format = self::analyzeValueFormat($originalValue);
+        $result = '';
+
+        for ($i = 0; $i < $format['length']; $i++) {
+            $char = $originalValue[$i];
+
+            if (ctype_digit($char)) {
+                $result .= (string)rand(0, 9);
+            } elseif (ctype_upper($char)) {
+                $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $result .= $chars[mt_rand(0, strlen($chars) - 1)];
+            } elseif (ctype_lower($char)) {
+                $chars = 'abcdefghijklmnopqrstuvwxyz';
+                $result .= $chars[mt_rand(0, strlen($chars) - 1)];
+            } else {
+                $result .= $char;
+            }
+        }
+
+        return $result;
+    }
+
+    public static function generateIban(string $originalIban = ''): string {
+        $length = $originalIban !== '' ? strlen(preg_replace('/\s+/', '', $originalIban)) : rand(15, 34);
+        $countryCodes = ['GB', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'PT', 'IE'];
+        $cc = $countryCodes[array_rand($countryCodes)];
+        $checkDigits = sprintf('%02d', rand(0, 99));
+        $remainingLength = $length - 4;
+        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $bankInfo = '';
+        for ($i = 0; $i < $remainingLength; $i++) {
+            $bankInfo .= $chars[mt_rand(0, strlen($chars) - 1)];
+        }
+        return $cc . $checkDigits . $bankInfo;
+    }
+
+    public static function generateS3Bucket(string $originalS3): string {
+        if (!str_starts_with(strtolower($originalS3), 's3://')) {
+            return self::generateSmartString($originalS3);
+        }
+
+        $bucketPart = substr($originalS3, 5);
+        $fakeBucket = self::generateSmartString($bucketPart);
+        return 's3://' . $fakeBucket;
+    }
+
+    public static function generateDockerRegistry(string $originalDocker): string {
+        if (!preg_match('/^([a-z0-9.-]+\\.(?:corp|internal|local|lan))(?::(\\d{2,5}))?\\/([A-Za-z0-9._-]+)(?::([A-Za-z0-9._-]+))?$/i', $originalDocker, $matches)) {
+            return self::generateSmartString($originalDocker);
+        }
+
+        $domain = $matches[1];
+        $port = $matches[2] ?? '';
+        $service = $matches[3];
+        $tag = $matches[4] ?? '';
+
+        // Analyze service name to determine if it's sensitive
+        $serviceFormat = self::analyzeValueFormat($service);
+        $domainFormat = self::analyzeValueFormat($domain);
+
+        // Common default registries that are NOT sensitive
+        $commonRegistries = [
+            'registry.corp.internal', 'registry.internal', 'registry.local',
+            'docker.registry', 'docker.local', 'docker.internal',
+            'registry.corp', 'registry'
+        ];
+
+        // Preserve common registry domains
+        if (in_array(strtolower($domain), $commonRegistries, true)) {
+            $fakeDomain = $domain;
+        } else {
+            // Scrub domain only if it looks like a business-sensitive name
+            if ($domainFormat['is_secret_like'] || self::containsBusinessTerms($domain)) {
+                $fakeDomain = self::generateSmartString($domain);
+            } else {
+                $fakeDomain = $domain;  // Technical context, preserve
+            }
+        }
+
+        // Scrub service only if it looks like business-sensitive data
+        // Low entropy, known tech names, or generic functional names are preserved
+        if ($serviceFormat['is_secret_like'] || self::containsBusinessTerms($service)) {
+            $fakeService = self::generateSmartString($service);
+        } else {
+            $fakeService = $service;  // Technical context (redis, postgres, etc.), preserve
+        }
+
+        // Preserve version/tag unchanged - it's technical context, not sensitive
+        $fakeTag = $tag !== '' ? ':' . $tag : '';
+
+        return $fakeDomain . ($port !== '' ? ":{$port}/" : '/') . $fakeService . $fakeTag;
+    }
+
+    private static function containsBusinessTerms(string $value): bool {
+        $businessTerms = [
+            'payment', 'billing', 'transaction', 'invoice', 'receipt',
+            'customer', 'financial', 'credit', 'debit', 'fraud',
+            'insurance', 'claim', 'policy', 'premium', 'account',
+            'proprietary', 'secret', 'confidential', 'internal', 'private'
+        ];
+
+        $lowerValue = strtolower($value);
+        foreach ($businessTerms as $term) {
+            if (str_contains($lowerValue, $term)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

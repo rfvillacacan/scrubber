@@ -411,8 +411,53 @@ input:focus-visible,
     margin-bottom: 12px;
 }
 
-.ruleset-actions input[type="file"] {
-    font-size: 12px;
+.hidden-file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.file-upload-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-family: "Georgia", "Palatino Linotype", serif;
+    font-weight: 600;
+    color: var(--ink-1);
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.file-upload-label:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+.file-upload-label:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1);
+}
+
+.file-icon {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+#fileNameDisplay {
+    color: var(--ink-1);
 }
 
 .ruleset-list {
@@ -480,6 +525,13 @@ input:focus-visible,
 .ruleset-desc {
     font-size: 12px;
     color: var(--ink-2);
+}
+
+.ruleset-filename {
+    font-size: 11px;
+    color: #6b7280;
+    font-family: "Menlo", "Consolas", monospace;
+    font-weight: 500;
 }
 
 .ruleset-controls {
@@ -738,6 +790,12 @@ input:focus-visible,
         flex-wrap: wrap;
         gap: 8px;
     }
+
+    .file-upload-label {
+        flex: 1 1 auto;
+        justify-content: center;
+        font-size: 13px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -757,5 +815,23 @@ input:focus-visible,
     .small {
         padding: 5px 9px;
         font-size: 11px;
+    }
+
+    .file-upload-label {
+        padding: 6px 12px;
+        font-size: 12px;
+        gap: 6px;
+    }
+
+    .file-icon {
+        width: 14px;
+        height: 14px;
+    }
+
+    #fileNameDisplay {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }

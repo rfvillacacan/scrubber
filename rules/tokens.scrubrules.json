@@ -45,6 +45,7 @@
             "generator": "bearerToken",
             "cache_type": "global",
             "data_type": "token",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {
@@ -107,6 +108,7 @@
             "generator": "uuid",
             "cache_type": "global",
             "data_type": "uuid",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {
@@ -119,6 +121,7 @@
             "generator": "uuid",
             "cache_type": "global",
             "data_type": "uuid",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {
@@ -140,6 +143,18 @@
             "validation": null,
             "generator": "password",
             "cache_type": "local"
+        },
+        {
+            "id": "BASE64_SECRET",
+            "enabled": true,
+            "priority": 169,
+            "pattern": "\\b(?:SECRET|PASSWORD|PASS|API_KEY|API-KEY|ACCESS_KEY|ACCESS-KEY|PRIVATE_KEY|PRIVATE-KEY|TOKEN|AUTH_TOKEN|AUTH-TOKEN)\\s*[:=]\\s*([A-Za-z0-9+\\/]{20,}={0,2})\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "string",
+            "cache_type": "global",
+            "data_type": "base64_secret",
+            "skip_length_adjust": false
         },
         {
             "id": "USERNAME_ASSIGN",

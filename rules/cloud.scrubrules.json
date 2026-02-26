@@ -12,9 +12,10 @@
             "pattern": "\\bs3:\\/\\/[a-z0-9.-]{3,63}\\b",
             "flags": "i",
             "validation": null,
-            "generator": "string",
+            "generator": "s3Bucket",
             "cache_type": "local",
-            "data_type": "s3_bucket"
+            "data_type": "s3_bucket",
+            "skip_length_adjust": false
         },
         {
             "id": "DOCKER_REGISTRY",
@@ -23,9 +24,10 @@
             "pattern": "\\b[a-z0-9.-]+\\.(?:corp|internal|local|lan)(?::\\d{2,5})?\\/[A-Za-z0-9._-]+(?::[A-Za-z0-9._-]+)?\\b",
             "flags": "i",
             "validation": null,
-            "generator": "string",
+            "generator": "dockerRegistry",
             "cache_type": "local",
-            "data_type": "docker_registry"
+            "data_type": "docker_registry",
+            "skip_length_adjust": false
         },
         {
             "id": "AZURE_TENANT_ID",
@@ -37,6 +39,7 @@
             "generator": "uuid",
             "cache_type": "global",
             "data_type": "uuid",
+            "normalize": "lower",
             "skip_length_adjust": true
         }
     ]

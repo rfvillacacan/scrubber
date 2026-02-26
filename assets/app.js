@@ -705,6 +705,11 @@
             desc.className = "ruleset-desc";
             desc.textContent = item.description || "No description";
 
+            const filename = document.createElement("div");
+            filename.className = "ruleset-filename";
+            const fileNameOnly = item.file ? item.file.split("/").pop().split("\\").pop() : "unknown";
+            filename.textContent = `File: ${fileNameOnly}`;
+
             const status = document.createElement("div");
             status.className = "ruleset-status";
             status.textContent = item.valid ? "Valid" : "Errors";
@@ -714,6 +719,7 @@
 
             meta.appendChild(title);
             meta.appendChild(desc);
+            meta.appendChild(filename);
             meta.appendChild(status);
 
             const controls = document.createElement("div");
@@ -954,6 +960,11 @@
         }
 
         rulesetFile.value = "";
+        // Reset filename display
+        const fileNameDisplay = document.getElementById("fileNameDisplay");
+        if (fileNameDisplay) {
+            fileNameDisplay.textContent = "Choose Ruleset File";
+        }
         await loadRulesets();
     }
 
@@ -1129,6 +1140,21 @@
     refreshHistoryBtn.addEventListener("click", () => runWithButtonBusy(refreshHistoryBtn, "Refreshing", updateHistory));
     if (uploadRulesetBtn) {
         uploadRulesetBtn.addEventListener("click", () => runWithButtonBusy(uploadRulesetBtn, "Uploading", handleUploadRuleset));
+    }
+    if (rulesetFile) {
+        rulesetFile.addEventListener("change", () => {
+            const fileNameDisplay = document.getElementById("fileNameDisplay");
+            if (fileNameDisplay) {
+                if (rulesetFile.files && rulesetFile.files.length > 0) {
+                    const fileName = rulesetFile.files[0].name;
+                    // Shorten display if too long
+                    const displayName = fileName.length > 30 ? fileName.substring(0, 27) + "..." : fileName;
+                    fileNameDisplay.textContent = displayName;
+                } else {
+                    fileNameDisplay.textContent = "Choose Ruleset File";
+                }
+            }
+        });
     }
     if (backupRulesBtn) {
         backupRulesBtn.addEventListener("click", () => {

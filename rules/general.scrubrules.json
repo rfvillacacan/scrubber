@@ -31,6 +31,7 @@
             "generator": "customerId",
             "cache_type": "global",
             "data_type": "customer_id",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {
@@ -83,6 +84,7 @@
             "generator": "uuid",
             "cache_type": "global",
             "data_type": "uuid",
+            "normalize": "lower",
             "skip_length_adjust": true
         },
         {
@@ -97,7 +99,7 @@
             "id": "VERSION_NUMBER",
             "enabled": true,
             "priority": 109,
-            "pattern": "\\b(?:VERSION|VER|V)\\s*[:=]?\\s*([0-9]+\\.[0-9]+(?:\\.[0-9]+)?)\\b",
+            "pattern": "(?<![\\\\\\/:])(?:VERSION|VER|V)\\s*[:=]?\\s*([0-9]+\\.[0-9]+(?:\\.[0-9]+)?)\\b",
             "flags": "i",
             "validation": null,
             "generator": "string",

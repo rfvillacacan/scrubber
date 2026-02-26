@@ -696,10 +696,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2>Rulesets</h2>
         </div>
         <div class="ruleset-actions">
-            <label for="rulesetFile" class="sr-only">Select ruleset JSON file</label>
-            <input id="rulesetFile" type="file" accept=".json,.scrubrules.json" />
+            <label class="file-upload-label" for="rulesetFile">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="file-icon">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                </svg>
+                <span id="fileNameDisplay">Choose Ruleset File</span>
+            </label>
+            <input id="rulesetFile" type="file" accept=".json,.scrubrules.json" class="hidden-file-input" />
             <button id="uploadRulesetBtn" type="button" class="secondary">Upload Ruleset</button>
-            <button id="backupRulesBtn" type="button" class="secondary">Backup Rules (ZIP)</button>
+            <button id="backupRulesBtn" type="button" class="secondary">Download Backup Copy</button>
         </div>
         <div id="rulesetList" class="ruleset-list" aria-live="polite">
             <p class="empty-history">Loading rulesets...</p>

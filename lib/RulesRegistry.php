@@ -89,6 +89,7 @@ class RulesRegistry {
                 'cache_type' => $rule['cache_type'] ?? 'local',
                 'data_type' => $rule['data_type'] ?? null,
                 'skip_length_adjust' => $rule['skip_length_adjust'] ?? false,
+                'normalize' => $rule['normalize'] ?? null,
             ];
         }
     }
