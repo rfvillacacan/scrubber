@@ -147,15 +147,44 @@ Available generators in `lib/DataGenerator.php`:
 | `jwt` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | JWT tokens |
 | `bearerToken` | `tok_abc123xyz789` | Bearer tokens |
 | `amount` | `1250.00` | Financial amounts |
+| `iban` | `GB82WEST12345698765432` | IBANs (ALL CAPS, length preserved) |
+| `s3Bucket` | `s3://my-fake-bucket/path` | S3 bucket URIs (preserves s3://) |
+| `dockerRegistry` | `registry.corp.internal:5000/service:alpine` | Docker registries (preserves ports, versions) |
 | `creditCard` | `4532015112830366` | Credit card numbers (Luhn-valid) |
 | `databaseName` | `production_db` | Database names |
 | `username` | `admin_user` | Usernames |
-| `string` | `aB3xY7zQ9` | Generic alphanumeric (fallback) |
+| `string` | `aB3xY7zQ9` | Generic alphanumeric with smart format matching |
 
 **Guidelines:**
 - Use the most specific generator for your data type
 - If no specific generator exists, use `string`
 - Generators maintain format where possible (UUIDs, emails, etc.)
+- The `string` generator uses smart format matching by default
+
+### Smart Format Matching
+
+The `string` generator (and other generators when appropriate) uses **smart format matching** to preserve original value characteristics:
+
+- **Case preservation**: Original letter case is maintained (UPPER, lower, MixedCase)
+- **Character type preservation**: Letters, digits, special chars in same positions
+- **Length matching**: Output length matches input length (unless `skip_length_adjust: true`)
+- **Special character preservation**: Punctuation, symbols, structural chars maintained
+
+This approach ensures fake data looks realistic while maintaining the original structure, making it ideal for:
+- Mixed-case identifiers (CustomerID, orderId, etc.)
+- Structured strings (API-KEY-123, prod_db_v2, etc.)
+- Values with special formatting (account-123_ABC, etc.)
+
+### Entropy-Based Detection
+
+For Docker registries and other cloud/DevOps patterns, the system uses **entropy-based detection**:
+
+- **Shannon entropy calculation**: Measures randomness to detect secrets
+- **Secret-like values**: High-entropy patterns (API keys, tokens, hashes) are scrubbed
+- **Technical context**: Low-entropy values (common registries, known containers) are preserved
+- **Business sensitivity**: Values containing business terms (payment, billing, etc.) are flagged
+
+This value-based approach is more reliable than maintaining hardcoded lists of known values.
 
 ### Global vs Local Caching
 

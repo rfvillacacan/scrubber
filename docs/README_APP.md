@@ -87,6 +87,9 @@ Detected values are replaced with realistic fake data based on data type:
 | IPv4 | `192.168.1.100` | `217.89.45.112` | ipv4 |
 | Phone | `+1-555-123-4567` | `+1 (783) 6743-9208` | phoneNumber |
 | Customer ID | `CUST-884422` | `CUST-4d2f28` | customerId |
+| IBAN | `GB29NWBK60161331926819` | `GB82WEST12345698765432` | iban |
+| S3 Bucket | `s3://prod-bucket/data` | `s3://fake-bucket/Xyz9` | s3Bucket |
+| Docker Registry | `registry.corp.internal:5000/billing:2.14.7` | `registry.corp.internal:5000/payment-service:2.14.7` | dockerRegistry |
 | JWT | `eyJhbG...` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | jwt |
 
 ### 4. Consistency (Global Caching)
@@ -100,6 +103,49 @@ Output: "Contact: account_3a2f@example.com, CC: account_3a2f@example.com"
 ```
 
 This works because we use **global caching** by data type. The hash of the original value determines the fake value.
+
+### 5. Smart Format Matching
+
+The `string` generator uses **smart format matching** to analyze and preserve original value characteristics:
+
+**What it preserves:**
+- **Case**: UPPER case, lower case, MixedCase all maintained
+- **Character types**: Letters, digits, special chars in same positions
+- **Length**: Output matches input length (for realistic appearance)
+- **Structure**: Dashes, dots, slashes, and other special chars preserved
+
+**Examples:**
+```
+Original:  Customer-123_ABC
+Fake:      Client-987_XYZ
+           ↑ Mixed case preserved
+
+Original:  s3://prod-data-bucket/logs/
+Fake:      s3://fake-log-bucket/Xyz9/
+           ↑ Special chars maintained
+```
+
+### 6. Technical Context Preservation
+
+The system intelligently preserves **non-sensitive technical context** using entropy analysis:
+
+**What's preserved (low-entropy, common patterns):**
+- **Protocols**: `s3://`, `https://`, `docker://` (standards, not secrets)
+- **Ports**: `:5000/`, `:443/`, `:8080/` (network configuration)
+- **Versions**: `:alpine`, `:v1.2.3`, `:latest` (software versions)
+- **Common registries**: `registry.corp.internal`, `docker.io`, `gcr.io` (infrastructure)
+- **Known containers**: `redis`, `postgres`, `nginx` (public images)
+
+**What's scrubbed (high-entropy or business-sensitive):**
+- **Secrets**: API keys, tokens, passwords, hashes (high entropy)
+- **Business data**: Container names with `payment`, `billing`, `customer` (business terms)
+- **Private registries**: Custom domain names with business significance
+
+**Entropy-based detection:**
+- Calculates Shannon entropy to measure randomness
+- High entropy (>3.5 bits/char) = likely a secret
+- Business term detection identifies sensitive container names
+- Value-based approach, not hardcoded lists
 
 ## Security Model
 

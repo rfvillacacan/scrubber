@@ -8,12 +8,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Smart Format Matching**: Generator now analyzes and preserves original value characteristics
+  - Case preservation (UPPER, lower, MixedCase) maintained in fake data
+  - Character types (letters, digits, special chars) preserved by position
+  - Length matching ensures fake data is similar size to original
+  - Special characters and structural patterns maintained
+- **Entropy-Based Detection**: System uses Shannon entropy to distinguish sensitive data
+  - High-entropy values (API keys, tokens, hashes) flagged as secrets
+  - Low-entropy values (common registries, known containers) preserved
+  - Business term detection (payment, billing, proprietary, etc.)
+  - Value-based approach more reliable than hardcoded lists
+- **IBAN Generator**: Dedicated generator for International Bank Account Numbers
+  - Preserves original IBAN length (variable by country)
+  - Generates ALL CAPS format (international standard)
+  - Uses realistic country codes and check digits
+- **S3 Bucket Generator**: Specialized generator for AWS S3 bucket URIs
+  - Preserves `s3://` protocol prefix for technical context
+  - Smart format matching for bucket names and paths
+  - Maintains structural integrity for troubleshooting
+- **Docker Registry Generator**: Context-aware generator for Docker image references
+  - Preserves port numbers (e.g., `:5000/`) for technical context
+  - Preserves version tags (e.g., `:alpine`, `:v1.2.3`) for debugging
+  - Entropy-based detection distinguishes business-sensitive containers
+  - Common registries (registry.corp.internal, docker.io) preserved
+- **Case-Sensitive Restore**: Fixed hash collision bug in value restoration
+  - Original value (case-sensitive) now used for hash calculation
+  - Prevents `john.doe@corp.internal` → `JOHN.DOE@CORP.INTERNAL` bug
+  - Ensures accurate restoration of original casing
+- **Custom File Upload UI**: Improved file input with custom styling
+  - SVG upload icon for better visual feedback
+  - Selected filename display after file selection
+  - Responsive design for mobile and desktop
+  - Hidden native file input with styled label trigger
+- **BASE64_SECRET Rule**: New label-based detection for base64-encoded secrets
+  - Detects patterns like `SECRET: <base64>`, `PASSWORD: <base64>`
+  - Prioritizes label context over pure pattern matching
+  - Reduces false positives on non-sensitive base64 data
+
+### Changed
 - **Major Architecture Update**: JSON-driven rule configuration system
   - All detection patterns and generation logic now configured in JSON files
   - No PHP code changes required to add new rules
   - New rule configuration fields: `generator`, `cache_type`, `data_type`, `skip_length_adjust`
-
-### Changed
 - **Scrubbing Behavior**: Replaced placeholder system with realistic fake data generation
   - Old: `[[[SCRUB_TOKENS_EMAIL_...@dummy.local]]]`
   - New: `account_3a2f@example.com` (contextually appropriate)
@@ -23,8 +59,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Caching System**: Implemented global and local caching
   - Global: Same value always maps to same fake value (emails, IPs, UUIDs)
   - Local: Unique fake values per occurrence (passwords, tokens)
+- **UI Improvements**: Renamed "Backup Rules (ZIP)" to "Download Backup Copy"
 
 ### Fixed
+- **Case-Sensitive Restore Bug**: Hash collision when normalizing values before hashing
+  - Both `john@example.com` and `JOHN@EXAMPLE.COM` now hash differently
+  - Original value used for hash instead of normalized value
+  - All casings now restore correctly
+- **VERSION_NUMBER Regex**: Invalid negative lookbehind syntax
+  - Fixed JSON escaping for regex pattern
+  - Now correctly avoids matching docker tags like `:v1.2.3`
+  - Still matches explicit version labels like `VERSION: 1.2.3`
 - Consistency issue where same value could get different replacements
 - Labels being removed during scrubbing process
 - Over-broad patterns matching parts of other values

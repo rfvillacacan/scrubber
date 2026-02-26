@@ -308,8 +308,30 @@ Result: `Request-ID: abc123` → `Request-ID: fed456` (label preserved!)
 | `jwt` | `eyJhbG...` | JWT tokens |
 | `bearerToken` | `tok_abc123xyz789` | Bearer tokens |
 | `amount` | `1250.00` | Financial amounts |
-| `string` | `aB3xY7` | Generic alphanumeric strings |
+| `iban` | `GB82WEST12345698765432` | IBANs (ALL CAPS, length preserved) |
+| `s3Bucket` | `s3://my-fake-bucket/path` | S3 bucket URIs (preserves s3://) |
+| `dockerRegistry` | `registry.corp.internal:5000/service:alpine` | Docker registries (preserves ports, versions) |
+| `string` | `aB3xY7` | Generic strings (smart format matching) |
 | `creditCard` | `4532015112830366` | Credit card numbers |
+
+### Smart Format Matching
+
+The `string` generator uses **smart format matching** to preserve original value characteristics:
+- **Case**: Original letter case is preserved (UPPER, lower, MixedCase)
+- **Character types**: Letters, numbers, and special characters maintained in position
+- **Length**: Output length matches input length (unless `skip_length_adjust: true`)
+- **Special chars**: Punctuation, symbols, and structural characters preserved
+
+This ensures fake data looks realistic while maintaining the original structure.
+
+### Entropy-Based Detection
+
+The system uses **Shannon entropy calculation** to distinguish between:
+- **Secrets/tokens**: High-entropy values (API keys, hashes, tokens)
+- **Technical data**: Low-entropy values (common registries, known containers)
+- **Business-sensitive**: Values containing business terms (payment, billing, etc.)
+
+This value-based approach is more reliable than hardcoded lists of known values.
 
 ## Security Notes
 
