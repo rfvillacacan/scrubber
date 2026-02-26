@@ -3,12 +3,85 @@ declare(strict_types=1);
 
 class DataGenerator {
 
+    // Static cache for consistent domain mapping
+    private static array $domainMap = [];
+    private static array $fakeDomains = [
+        'example.com', 'test.local', 'demo.org', 'sample.net',
+        'mockdomain.io', 'fakedata.test', 'placeholder.co', 'testsite.org'
+    ];
+
     public static function generateEmail(): string {
-        $domains = ['example.com', 'test.local', 'demo.org', 'sample.net'];
         $usernames = ['user', 'admin', 'notify', 'service', 'account'];
         return $usernames[array_rand($usernames)] . '_' .
                substr(md5((string)rand()), 0, 8) . '@' .
-               $domains[array_rand($domains)];
+               self::$fakeDomains[array_rand(self::$fakeDomains)];
+    }
+
+    /**
+     * Get a consistent fake domain for an original domain
+     * Same original domain always maps to same fake domain
+     * Extracts base domain (second-level + TLD) for consistent mapping
+     */
+    public static function getFakeDomain(string $originalDomain): string {
+        // Extract domain from email if full email provided
+        if (str_contains($originalDomain, '@')) {
+            $originalDomain = substr(strrchr($originalDomain, '@'), 1);
+        }
+
+        // Extract base domain (second-level domain + TLD)
+        // e.g., app.corp.internal -> corp.internal
+        // e.g., api.service.example.com -> example.com
+        $parts = explode('.', $originalDomain);
+        if (count($parts) >= 2) {
+            // Get last 2 parts for base domain
+            $baseDomain = $parts[count($parts) - 2] . '.' . $parts[count($parts) - 1];
+
+            // Special handling for common multi-part TLDs (co.uk, com.au, etc.)
+            if (count($parts) >= 3 && in_array($parts[count($parts) - 2], ['co', 'com', 'org', 'net', 'gov', 'edu', 'ac'])) {
+                $baseDomain = $parts[count($parts) - 3] . '.' . $baseDomain;
+            }
+        } else {
+            $baseDomain = $originalDomain;
+        }
+
+        // Return cached mapping if available
+        if (isset(self::$domainMap[$baseDomain])) {
+            return self::$domainMap[$baseDomain];
+        }
+
+        // Create consistent mapping based on hash
+        $hash = substr(md5($baseDomain), 0, 8);
+        $index = hexdec(substr($hash, 0, 2)) % count(self::$fakeDomains);
+        $fakeDomain = self::$fakeDomains[$index];
+
+        // Cache the mapping
+        self::$domainMap[$baseDomain] = $fakeDomain;
+        return $fakeDomain;
+    }
+
+    /**
+     * Generate a fake URL with consistent domain mapping
+     * Preserves protocol, port, path structure
+     */
+    public static function generateUrl(string $originalUrl): string {
+        // Extract host from URL
+        if (!preg_match('~^([a-z][a-z0-9+.-]*):\\/\\/([^\\/:]+)~i', $originalUrl, $matches)) {
+            return self::generateSmartString($originalUrl);
+        }
+
+        $host = $matches[2];
+
+        // Get consistent fake domain for this host
+        $fakeDomain = self::getFakeDomain($host);
+
+        // Replace host in original URL with fake domain
+        $fakeUrl = preg_replace(
+            '~^([a-z][a-z0-9+.-]*):\\/\\/[^\\/:]+~i',
+            '$1://' . $fakeDomain,
+            $originalUrl
+        );
+
+        return $fakeUrl;
     }
 
     public static function generatePassword(int $length = 12): string {

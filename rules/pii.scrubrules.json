@@ -19,6 +19,18 @@
             "skip_length_adjust": true
         },
         {
+            "id": "URL",
+            "enabled": true,
+            "priority": 295,
+            "pattern": "\\b((?:https?|ftp)://[^\\s<>\"']+\\.[^\\s<>\"']+)\\b",
+            "flags": "i",
+            "validation": null,
+            "generator": "url",
+            "cache_type": "global",
+            "data_type": "url",
+            "skip_length_adjust": false
+        },
+        {
             "id": "PHONE_LABEL",
             "enabled": true,
             "priority": 120,
