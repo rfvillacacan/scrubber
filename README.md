@@ -1,11 +1,15 @@
 # Scrubber
 
-Scrubber is a local-first PHP application for reversible sensitive-data anonymization. It replaces sensitive values with realistic fake data while preserving data structure, making it ideal for sharing logs with external tools like AI assistants.
+Scrubber is a local-first PHP application for reversible sensitive-data anonymization. It replaces **only sensitive values** with realistic fake data while **preserving technical context** (protocols, ports, versions, common infrastructure), making it ideal for sharing logs with external tools like AI assistants.
+
+**Key differentiator**: Scrubber intelligently distinguishes between sensitive data (secrets, PII, tokens) and technical context (standard protocols, public registries, version tags) using entropy-based detection - so you get safe, shareable logs that AI assistants can actually understand and troubleshoot!
 
 ## Features
 
+- **Technical Context Preservation** - Intelligently preserves non-sensitive technical data (protocols like `s3://`, ports like `:5000/`, versions like `:alpine`, common registries) using entropy-based detection - only scrubs actual secrets!
 - **Realistic Fake Data Generation** - Generates contextually appropriate fake data (emails, IPs, UUIDs, etc.) instead of obvious placeholders
 - **Label Preservation** - Preserves labels like "Request-ID:", "Email:", "IP:" for better troubleshooting context
+- **Smart Format Matching** - Analyzes and preserves original value characteristics (case, character types, length, special characters)
 - **Consistent Mapping** - Same values always map to the same fake value throughout a document (global caching by data type)
 - **JSON-Driven Rules** - All detection patterns and generators configured in JSON files - no code changes needed to add rules
 - **Session-scoped Storage** - SQLite-based reversible mapping storage with optional encryption
@@ -142,7 +146,41 @@ docker compose ps
 
 ## How It Works
 
-### Scubbing Example
+### Scrubbing Example - Technical Context Preserved
+
+**Input (with Docker and S3 references):**
+```
+Deploying container: registry.corp.internal:5000/billing-service:2.14.7
+S3 bucket: s3://prod-customer-data/invoices/
+Database: postgres-db.prod.internal:5432/paymentdb
+Secret: AKIA1234567890ABCDEFGHI
+Email: john.doe@corp.internal
+```
+
+**Output (safe to share with AI):**
+```
+Deploying container: registry.corp.internal:5000/payment-service:2.14.7
+S3 bucket: s3://fake-invoice-bucket/Xyz9/
+Database: postgres-db.prod.internal:5432/accountdb
+Secret: AKIA9876543210ZYXWVUTSQR
+Email: jane.smith@corp.internal
+```
+
+**Notice what's preserved (technical context):**
+- ✅ `registry.corp.internal:5000/` - Common registry and port preserved
+- ✅ `:2.14.7` - Version tag preserved (AI needs this to troubleshoot)
+- ✅ `s3://` protocol preserved
+- ✅ `postgres-db.prod.internal:5432/` - Infrastructure host and port
+- ✅ `.corp.internal` domain - Internal network structure
+
+**Notice what's scrubbed (sensitive data):**
+- 🔒 `billing-service` → `payment-service` (business-sensitive container name)
+- 🔒 `prod-customer-data` → `fake-invoice-bucket` (business-sensitive bucket name)
+- 🔒 `paymentdb` → `accountdb` (business-sensitive database name)
+- 🔒 `AKIA123...` → `AKIA987...` (AWS access key - secret!)
+- 🔒 `john.doe@...` → `jane.smith@...` (PII - email address)
+
+### Scrubbing Example - Basic Data
 
 **Input:**
 ```
@@ -159,10 +197,11 @@ IP: 217.89.45.112, Source Account: 987654321098
 
 ### Key Behaviors
 
-1. **Labels are preserved** - "Request-ID:", "Customer:", "Email:", etc. remain intact
-2. **Same value = same fake** - Multiple occurrences of `john@example.com` become the same fake email
-3. **Contextual fake data** - Emails look like emails, IPs look like IPs, UUIDs maintain format
-4. **Structure maintained** - The scrubbed text remains valid and parseable
+1. **Technical context preserved** - Protocols, ports, versions, common registries kept intact for troubleshooting
+2. **Labels are preserved** - "Request-ID:", "Customer:", "Email:", etc. remain intact
+3. **Same value = same fake** - Multiple occurrences of `john@example.com` become the same fake email
+4. **Contextual fake data** - Emails look like emails, IPs look like IPs, UUIDs maintain format
+5. **Structure maintained** - The scrubbed text remains valid and parseable
 
 ## Architecture
 
