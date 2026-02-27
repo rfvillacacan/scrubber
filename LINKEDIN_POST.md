@@ -93,7 +93,7 @@ Unlike simple redaction tools, Scrubber:
 ## 🔗 Get Started
 
 ```bash
-git clone https://github.com/[your-username]/scrubber.git
+git clone https://github.com/rfvillacacan/scrubber.git
 cd scrubber
 cp .env.example .env
 docker compose up -d --build
@@ -125,8 +125,8 @@ Built for developers who care about security but need AI assistance. Scrubber he
 
 ---
 
-**🔗 GitHub:** https://github.com/[your-username]/scrubber
-**📖 Docs:** https://github.com/[your-username]/scrubber/blob/main/README.md
+**🔗 GitHub:** https://github.com/rfvillacacan/scrubber
+**📖 Docs:** https://github.com/rfvillacacan/scrubber/blob/main/README.md
 **🐳 Docker:** Multi-arch support for Linux, Mac, Windows
 
 **💡 Pro Tip:** Use HTTPS mode for clipboard copy/paste functionality in the browser!
