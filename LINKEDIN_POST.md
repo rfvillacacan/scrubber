@@ -66,6 +66,16 @@ S3: s3://fake-invoice-bucket/Xyz9/
 
 **Notice:** Labels preserved (`Email:`, `Authorization:`), technical context intact (`s3://`), but sensitive data replaced with realistic fake values!
 
+## 🎬 Watch the Demo
+
+**See Scrubber in action:** https://github.com/rfvillacacan/scrubber/blob/main/docs/images/demo.mp4
+
+The demo shows:
+- Pasting raw log data with sensitive information
+- One-click scrubbing with realistic fake data
+- Technical context preservation for AI readability
+- Quick Test verification for accurate restoration
+
 ## 🛠️ Technical Highlights
 
 - **Local-first architecture** - No external API calls, data never leaves your environment

@@ -24,6 +24,24 @@ Scrubber is a local-first PHP application for reversible sensitive-data anonymiz
 
 **The Scrubber interface** showing the scrub phase with raw input (left) and scrubbed output (right). The Quick Test button verifies accurate restoration of original values.
 
+## 🎥 Demo Video
+
+<p align="center">
+  <a href="docs/images/demo.mp4">
+    <img src="docs/images/video-thumbnail.png" alt="Watch Demo Video" width="600">
+  </a>
+</p>
+
+<p align="center">
+  <a href="docs/images/demo.mp4">📺 Watch Demo</a> | See Scrubber in action - anonymize logs in seconds!
+</p>
+
+**Watch the demo** to see Scrubber in action:
+- Paste sensitive log data with emails, IPs, tokens, and passwords
+- Click Scrub to instantly anonymize with realistic fake data
+- Preserve technical context while protecting sensitive information
+- Quick Test verifies accurate restoration
+
 ## Quick Start (Docker)
 
 Choose between **HTTP** (simpler, for local development) or **HTTPS** (required for clipboard features and production).
