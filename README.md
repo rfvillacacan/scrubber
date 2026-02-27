@@ -4,8 +4,6 @@ Scrubber is a local-first PHP application for reversible sensitive-data anonymiz
 
 **Key differentiator**: Scrubber intelligently distinguishes between sensitive data (secrets, PII, tokens) and technical context (standard protocols, public registries, version tags) using entropy-based detection - so you get safe, shareable logs that AI assistants can actually understand and troubleshoot!
 
-> 💡 **New to Scrubber?** Check out the [LinkedIn Post](LINKEDIN_POST.md) for a quick overview of what makes this tool special!
-
 ## Features
 
 - **Technical Context Preservation** - Intelligently preserves non-sensitive technical data (protocols like `s3://`, ports like `:5000/`, versions like `:alpine`, common registries) using entropy-based detection - only scrubs actual secrets!
