@@ -25,12 +25,6 @@ Scrubber is a local-first PHP application for reversible sensitive-data anonymiz
 ## 🎥 Demo Video
 
 <p align="center">
-  <a href="docs/images/demo.mp4">
-    <img src="docs/images/video-thumbnail.png" alt="Watch Demo Video" width="600">
-  </a>
-</p>
-
-<p align="center">
   <a href="docs/images/demo.mp4">📺 Watch Demo</a> | See Scrubber in action - anonymize logs in seconds!
 </p>
 ## Quick Start (Docker)
